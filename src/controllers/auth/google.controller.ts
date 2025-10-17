@@ -1,9 +1,9 @@
-import { FRONTEND_BASE_URI, GOOGLE_CLIENT_ID, REDIRECT_URI_GOOGLE } from "../../configs/env"
-import type { registerAuthJson, googleUserinfo } from "../../utils/types"
-import { getUserbyEmail } from "../../database/models/user.model"
-import { getPayloadGoogleApi } from "../../utils/google"
+import { FRONTEND_BASE_URI, GOOGLE_CLIENT_ID, REDIRECT_URI_GOOGLE } from "../../configs/env.js"
+import type { registerAuthJson, googleUserinfo } from "../../utils/types.js"
+import { getUserbyEmail } from "../../database/models/user.model.js"
+import { getPayloadGoogleApi } from "../../utils/google.js"
 import type { Request, Response } from "express"
-import { registerJwt } from "../../utils/jwt"
+import { registerJwt } from "../../utils/jwt.js"
 
 
 

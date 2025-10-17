@@ -11,7 +11,7 @@ app.use(cookieParser());
 
 
 app.use(cors({
-  origin:"http://localhost:5000",
+  origin:["https://beta.hospedala.com", "http://localhost:5000"],
   credentials: true,    
 }));
 

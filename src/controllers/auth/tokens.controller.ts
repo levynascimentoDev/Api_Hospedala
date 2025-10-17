@@ -1,8 +1,8 @@
-import type { BadRequests, checkoutToken, loginAuthJson, registerAuthJson, Token } from "../../utils/types";
-import { getPayloadJwt, registerJwt } from "../../utils/jwt";
-import { generateCode } from "../../utils/functions";
+import type { BadRequests, checkoutToken, loginAuthJson, registerAuthJson, Token } from "../../utils/types.js";
+import { getPayloadJwt, registerJwt } from "../../utils/jwt.js";
+import { generateCode } from "../../utils/functions.js";
 import type { Request, Response } from "express";
-import { sendEmail } from "../../utils/mail";
+import { sendEmail } from "../../utils/mail.js";
 
 
 

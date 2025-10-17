@@ -5,6 +5,8 @@ import fs from 'node:fs'
 
 
 const db = mysql.createConnection("mysql://root:HDluvVbiSEAExCRirqjQKUOgEHcKFOCw@centerbeam.proxy.rlwy.net:40540/railway");
+
+
 db.connect(err => {
     if (err) return console.log("Erro ao conectar no banco e dados!", err);
     console.log("Banco de dados conectado")

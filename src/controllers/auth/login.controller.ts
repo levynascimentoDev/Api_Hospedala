@@ -1,10 +1,10 @@
-import type { UserRequest, BadRequests, Token, checkoutToken, loginAuthJson } from "../../utils/types";
-import { getUserbyEmail } from "../../database/models/user.model";
-import { getPayloadJwt, registerJwt } from "../../utils/jwt";
-import { generateCode } from "../../utils/functions";
+import type { UserRequest, BadRequests, Token, checkoutToken, loginAuthJson } from "../../utils/types.js";
+import { getUserbyEmail } from "../../database/models/user.model.js";
+import { getPayloadJwt, registerJwt } from "../../utils/jwt.js";
+import { generateCode } from "../../utils/functions.js";
 import type { Request, Response } from "express";
-import { verifyHash } from "../../utils/cript";
-import { sendEmail } from "../../utils/mail";
+import { verifyHash } from "../../utils/cript.js";
+import { sendEmail } from "../../utils/mail.js";
 
 
 

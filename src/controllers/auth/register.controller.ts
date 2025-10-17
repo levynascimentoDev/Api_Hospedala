@@ -1,11 +1,11 @@
-import { alterUserbyEmail, createUser, getUserbyEmail } from "../../database/models/user.model";
-import type { registerAuthJson, BadRequests, Token,  } from "../../utils/types";
-import { generateCode, generateID } from "../../utils/functions";
-import { getPayloadJwt, registerJwt } from "../../utils/jwt";
-import { FRONTEND_BASE_URI } from "../../configs/env";
+import { alterUserbyEmail, createUser, getUserbyEmail } from "../../database/models/user.model.js";
+import type { registerAuthJson, BadRequests, Token,  } from "../../utils/types.js";
+import { generateCode, generateID } from "../../utils/functions.js";
+import { getPayloadJwt, registerJwt } from "../../utils/jwt.js";
+import { FRONTEND_BASE_URI } from "../../configs/env.js";
 import type { Response, Request } from "express";
-import { generateHash } from "../../utils/cript";
-import { sendEmail } from "../../utils/mail";
+import { generateHash } from "../../utils/cript.js";
+import { sendEmail } from "../../utils/mail.js";
 
 
 export async function authRegister(req:Request<{}, {}, {email:string}>, res:Response<BadRequests | Token>) {
