@@ -1,25 +1,22 @@
 {
-  "name": "api",
+  "name": "api_hospedala",
   "module": "app.ts",
   "type": "module",
   "private": true,
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "bun run --watch app.js",
-    "build": "tsc && node copy-files.js"
+    "build": "tsc",
+    "dev": "bun run --watch app.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
-    "@types/bun": "latest",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/fs-extra": "^11.0.4",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/nodemailer": "^7.0.2"
+    "@types/jsonwebtoken": "^9.0.10"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "axios": "^1.12.2",
@@ -28,7 +25,6 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "fs-extra": "^11.3.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.15.2",
     "nodemailer": "^7.0.9"
