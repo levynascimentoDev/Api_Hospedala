@@ -3,8 +3,7 @@ import mysql from 'mysql2'
 import fs from 'node:fs'
 
 
-console.log(__dirname)
-console.log(__filename)
+
 const db = mysql.createConnection("mysql://root:HDluvVbiSEAExCRirqjQKUOgEHcKFOCw@centerbeam.proxy.rlwy.net:40540/railway");
 
 
