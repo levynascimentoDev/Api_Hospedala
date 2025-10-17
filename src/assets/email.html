@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Hospedala</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #F5F7FA;
+      margin: 0;
+      padding: 0;
+      color: #15223B;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #F5F7FA;
+      border-radius: 12px;
+      padding: 30px 20px;
+    }
+    .banner {
+      background-color: #15223B;
+      color: #F5F7FA;
+      padding: 20px 0;
+      font-size: 24px;
+      font-weight: bold;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .greeting {
+      margin: 20px 0;
+      font-size: 18px;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .code {
+      font-size: 22px;
+      font-weight: bold;
+      color: #15223B;
+      letter-spacing: 5px;
+      text-align: center;
+    }
+    .footer {
+      font-size: 14px;
+      color: #555;
+      margin-top: 30px;
+      line-height: 1.4;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" class="container">
+          <tr>
+            <td class="banner">Hospedala</td>
+          </tr>
+          <tr>
+            <td class="greeting">
+              Olá, {{name}}!<br>
+              Use o código abaixo para verificar sua conta:
+            </td>
+          </tr>
+          <tr>
+            <td class="code">
+              {{code0}}{{code1}}{{code2}}{{code3}}{{code4}}
+            </td>
+          </tr>
+          <tr>
+            <td class="footer">
+              Se você não solicitou este código, apenas ignore este email.<br>
+              Hospedala &copy; 2025
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
