@@ -1,11 +1,13 @@
 import path from 'node:path'
 import mysql from 'mysql2'
 import fs from 'node:fs'
+import { fileURLToPath } from 'node:url';
 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const db = mysql.createConnection("mysql://root:HDluvVbiSEAExCRirqjQKUOgEHcKFOCw@centerbeam.proxy.rlwy.net:40540/railway");
-
 
 db.connect(err => {
     if (err) return console.log("Erro ao conectar no banco e dados!", err);
