@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "start": "node dist/app.js",
     "dev": "bun run --watch app.js",
     "build": "tsc && node copy-files.js"
   },
