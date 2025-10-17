@@ -12,7 +12,7 @@ const db = mysql.createConnection("mysql://root:HDluvVbiSEAExCRirqjQKUOgEHcKFOCw
 db.connect(err => {
     if (err) return console.log("Erro ao conectar no banco e dados!", err);
     console.log("Banco de dados conectado")
-    const DirPath = path.join(__dirname, 'migrations');
+    const DirPath = path.join(process.cwd(), 'dist/migrations');
     fs.readdirSync(DirPath).forEach(file => {
         const contentFile = fs.readFileSync(path.join(DirPath, file), 'utf-8')
         db.execute(contentFile, err => {
