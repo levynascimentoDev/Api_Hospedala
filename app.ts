@@ -17,6 +17,6 @@ app.use(cors({
 
 app.use('/api', routes);
 
-app.listen(3000, () => {
-    console.log("server iniciado!");
+app.listen(8080, () => {
+  console.log("server iniciado!");
 })
