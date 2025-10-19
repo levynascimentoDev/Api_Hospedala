@@ -1,4 +1,4 @@
-import { DISCLOUD_DATABASE } from '../configs/env';
+import { DISCLOUD_DATABASE } from '../configs/env.js';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path'
 import mysql from 'mysql2'
