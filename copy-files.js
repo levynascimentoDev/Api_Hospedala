@@ -2,22 +2,24 @@ import { cpSync, readdirSync, statSync, mkdirSync } from "fs";
 import { join } from "path";
 
 function copyNonTsFiles(srcDir, destDir) {
-  const entries = readdirSync(srcDir);
+    readdirSync(srcDir).forEach(file => {
+        const srcPath = join(srcDir, file);
+        const destPath = join(destDir, file);
 
-  for (const entry of entries) {
-    const srcPath = join(srcDir, entry);
-    const destPath = join(destDir, entry);
-    const stats = statSync(srcPath);
+        if (statSync(srcPath).isDirectory()) {
 
-    if (stats.isDirectory()) {
-      mkdirSync(destPath, { recursive: true });
-      copyNonTsFiles(srcPath, destPath);
-    } else {
-      if (!srcPath.endsWith(".ts")) {
-        cpSync(srcPath, destPath);
-      }
-    }
-  }
+            mkdirSync(destPath, { recursive: true });
+            copyNonTsFiles(srcPath, destPath);
+
+        } else {
+
+            if (!srcPath.endsWith(".ts")) {
+
+                cpSync(srcPath, destPath);
+                
+            }
+        }
+    });
 }
 
 copyNonTsFiles("src", "dist/src");
