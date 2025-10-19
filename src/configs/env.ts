@@ -13,3 +13,4 @@ export const SMTP_KEY = process.env.SMTP_KEY as string;
 export const SMTP_EMAIL = process.env.SMTP_EMAIL as string;
 export const SMTP_LOGIN = process.env.SMTP_LOGIN as string;
 export const DATABASE_URI = process.env.DATABASE_URI as string;
+export const DISCLOUD_DATABASE = process.env.DISCLOUD_DATABASE as string;
