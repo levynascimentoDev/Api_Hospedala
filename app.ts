@@ -1,6 +1,6 @@
+import express, { type Request, type Response } from 'express'
 import routes from './src/routes/routes.js';
 import cookieParser from 'cookie-parser'
-import express from 'express'
 import cors from 'cors'
 import './src/database/db.js'
 
@@ -16,6 +16,12 @@ app.use(cors({
 }));
 
 app.use('/api', routes);
+
+app.use((_:Request, res:Response) => {
+  return res.status(404).json({
+    error:"Route Not Found"
+  });
+})
 
 app.listen(8080, () => {
   console.log("server iniciado!");
