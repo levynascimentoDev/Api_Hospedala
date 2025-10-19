@@ -8,14 +8,7 @@ import fs from 'node:fs'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// const db = mysql.createConnection(DISCLOUD_DATABASE);
-const db = mysql.createConnection({
-  host: 'mysql',                    // hostname da VLAN interna
-  port: 3306,                        // porta padrão MySQL
-  user: 'hospedalaadmindb',          // usuário configurado na VLAN
-  password: 'sui7HHJS8178327hRSIB', // senha do usuário
-  database: 'hospedaladb'            // nome do banco
-});
+const db = mysql.createConnection(DISCLOUD_DATABASE);
 
 db.connect(err => {
     if (err) return console.log("Erro ao conectar no banco e dados!", err);
