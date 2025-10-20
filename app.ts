@@ -17,11 +17,6 @@ app.use(cors({
 
 app.use('/api', routes);
 
-app.use((_:Request, res:Response) => {
-  return res.status(404).json({
-    error:"Route Not Found"
-  });
-})
 
 app.listen(8080, () => {
   console.log("server iniciado!");
