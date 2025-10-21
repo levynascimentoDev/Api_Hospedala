@@ -68,9 +68,9 @@ export async function googleAuthCallback(req:Request, res:Response) {
         }
         
     } catch (err) {
-        return res.status(404).json({
+        return res.status(400).json({
             status:404,
-            message:"Not Found"
+            message:"Bad Requests"
         })
     }
 }
