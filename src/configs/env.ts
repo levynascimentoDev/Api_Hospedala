@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 
 
+config({ path:'.env' });
 config({ path: process.env.NODE_ENV === 'development' ? '.env.development' : '.env.production' });
 globalThis.env = {
     SECRET_KEY_AUTH: process.env.SECRET_KEY_AUTH as string,
