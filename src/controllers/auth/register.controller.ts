@@ -2,7 +2,6 @@ import { alterUserbyEmail, createUser, getUserbyEmail } from "../../database/mod
 import type { registerAuthJson, BadRequests, Token,  } from "../../utils/types.js";
 import { generateCode, generateID } from "../../utils/functions.js";
 import { getPayloadJwt, registerJwt } from "../../utils/jwt.js";
-import { FRONTEND_BASE_URI } from "../../configs/env.js";
 import type { Response, Request } from "express";
 import { generateHash } from "../../utils/cript.js";
 import { sendEmail } from "../../utils/mail.js";
@@ -54,7 +53,6 @@ export async function authRegister(req:Request<{}, {}, {email:string}>, res:Resp
             
         }
     } catch (err) {
-        console.log("DEU BOSTA", err);
         
         return res.status(500).json({
             status: 500,
@@ -108,7 +106,6 @@ export async function confirmRegisterToken(req:Request<{}, {}, {code:string, tok
             });                
         }
     } catch (err) {
-        console.log("DEU BOSTA", err);
         
         return res.status(500).json({
             status: 500,
@@ -166,7 +163,7 @@ export async function registerComplete(req:Request<{}, {}, {token:string, passwo
                 email:payload.email,
                 password:passwordHash,
                 admin:false,
-                icon:payload.icon != null ? payload.icon : `${FRONTEND_BASE_URI}/user_picture.jpg`
+                icon:payload.icon != null ? payload.icon : `${env.FRONTEND_BASE_URI}/user_picture.jpg`
             })
 
             
@@ -228,7 +225,6 @@ export async function forgotPassword(req:Request<{}, {}, {password:string}>, res
         }
 
     } catch (err) {
-        console.log("DEU BOSTA", err);
         
         return res.status(500).json({
             status: 500,

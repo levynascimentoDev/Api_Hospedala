@@ -1,4 +1,3 @@
-import { FRONTEND_BASE_URI, GOOGLE_CLIENT_ID, REDIRECT_URI_GOOGLE } from "../../configs/env.js"
 import type { registerAuthJson, googleUserinfo } from "../../utils/types.js"
 import { getUserbyEmail } from "../../database/models/user.model.js"
 import { getPayloadGoogleApi } from "../../utils/google.js"
@@ -10,8 +9,8 @@ import { registerJwt } from "../../utils/jwt.js"
 
 export async function googleAuth(req:Request, res:Response) {
     try {
-        if (req.headers.origin == FRONTEND_BASE_URI) {
-            const urlAuth = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI_GOOGLE}&response_type=code&scope=profile email`  
+        if (req.headers.origin == env.FRONTEND_BASE_URI) {
+            const urlAuth = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${env.GOOGLE_CLIENT_ID}&redirect_uri=${env.REDIRECT_URI_GOOGLE}&response_type=code&scope=profile email`  
             return res.status(200).json({
                 status:200,
                 redirect_uri:urlAuth
@@ -49,7 +48,7 @@ export async function googleAuthCallback(req:Request, res:Response) {
                     sameSite:"strict",
                     maxAge:3 * 24 * 60 * 60 * 1000
                 });
-                return res.redirect(FRONTEND_BASE_URI+'/home')
+                return res.redirect(env.FRONTEND_BASE_URI+'/home')
 
             } else {
                 
@@ -62,7 +61,7 @@ export async function googleAuthCallback(req:Request, res:Response) {
                     icon:userinfo.picture
                 } as registerAuthJson, true, "5m");
                 
-                return res.redirect(`${FRONTEND_BASE_URI}/register/complete/${token}`)
+                return res.redirect(`${env.FRONTEND_BASE_URI}/register/complete/${token}`)
 
             }
         }

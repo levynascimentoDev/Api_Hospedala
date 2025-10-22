@@ -4,9 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "NODE_ENV=production node dist/app.js",
     "build": "tsc && node copy-files.js",
-    "dev": "bun run --watch app.ts"
+    "dev": "NODE_ENV=development bun run --watch app.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

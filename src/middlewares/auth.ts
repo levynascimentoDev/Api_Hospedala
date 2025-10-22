@@ -1,6 +1,5 @@
 import { type Response, type Request , type NextFunction} from "express";
 import { getUserbyEmail } from "../database/models/user.model.js";
-import { SECRET_KEY_AUTH } from "../configs/env.js";
 import { type Payload } from "../utils/types.js";
 import { getPayloadJwt } from "../utils/jwt.js";
 import jwt from "jsonwebtoken";
@@ -9,7 +8,7 @@ export async function AuthUser(req:Request, res:Response, next:NextFunction) {
     try {
         const token = req.cookies.auth_token as string
         
-        const payload = jwt.verify(token, SECRET_KEY_AUTH) as Payload 
+        const payload = jwt.verify(token, env.SECRET_KEY_AUTH) as Payload 
         const user = getUserbyEmail(payload.email);
 
         if (!token || !user) {

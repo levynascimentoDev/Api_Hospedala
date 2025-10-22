@@ -1,5 +1,4 @@
 import transporter from '../configs/mail.js';
-import {  EMAIL } from '../configs/env.js';
 import path from 'node:path'
 import fs from 'node:fs'
 import { fileURLToPath } from 'node:url';
@@ -20,7 +19,7 @@ export async function sendEmail(email:string, code:string, username?:string) {
     
     await transporter.sendMail({
         // from:`"Hospedala" <no-reply@hospedala.com>`,
-        from:EMAIL,
+        from:env.EMAIL,
         to:email,
         subject:"Verificação de email",
         html:fileContent
