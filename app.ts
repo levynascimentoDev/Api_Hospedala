@@ -18,5 +18,5 @@ app.use(cors({
 app.use('/api', routes);
 
 app.listen(env.PORT, () => {
-  console.log("server iniciado!");
+  console.log("server iniciado! na porta " + env.PORT);
 })
