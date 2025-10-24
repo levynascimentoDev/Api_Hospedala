@@ -34,11 +34,13 @@ export async function googleAuth(req:Request, res:Response) {
 
 export async function googleAuthCallback(req:Request, res:Response) {
     try {
-       
         const userinfo = await getPayloadGoogleApi(req.query.code as string) as googleUserinfo;
+        console.log(userinfo)
         
         if (userinfo) {
             const user = await getUserbyEmail(userinfo.email);
+
+            console.log(user)
             
             if (user) {
                 const authToken = registerJwt(user, false, "3d");
@@ -48,6 +50,7 @@ export async function googleAuthCallback(req:Request, res:Response) {
                     sameSite:"strict",
                     maxAge:3 * 24 * 60 * 60 * 1000
                 });
+                console.log(authToken)
                 return res.redirect(env.FRONTEND_BASE_URI+'/home')
 
             } else {
