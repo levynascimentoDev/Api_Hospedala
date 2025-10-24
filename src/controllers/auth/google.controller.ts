@@ -33,46 +33,43 @@ export async function googleAuth(req:Request, res:Response) {
 
 
 export async function googleAuthCallback(req:Request, res:Response) {
-    try {
-        const userinfo = await getPayloadGoogleApi(req.query.code as string) as googleUserinfo;
-        console.log(userinfo)
-        
-        if (userinfo) {
-            const user = await getUserbyEmail(userinfo.email);
+    const userinfo = await getPayloadGoogleApi(req.query.code as string) as googleUserinfo;
+    
+    if (userinfo) {
+        const user = await getUserbyEmail(userinfo.email);
 
-            console.log(user)
+        console.log(user)
+        
+        if (user) {
+            const authToken = registerJwt(user, false, "3d");
+            res.cookie('auth_token', authToken, { 
+                httpOnly:true,
+                secure:true,
+                sameSite:"strict",
+                maxAge:3 * 24 * 60 * 60 * 1000
+            });
+            console.log(authToken)
+            return res.redirect(env.FRONTEND_BASE_URI+'/home')
+
+        } else {
             
-            if (user) {
-                const authToken = registerJwt(user, false, "3d");
-                res.cookie('auth_token', authToken, { 
-                    httpOnly:true,
-                    secure:true,
-                    sameSite:"strict",
-                    maxAge:3 * 24 * 60 * 60 * 1000
-                });
-                console.log(authToken)
-                return res.redirect(env.FRONTEND_BASE_URI+'/home')
+            const token = registerJwt({
+                name:userinfo.given_name,
+                email:userinfo.email,
+                checkout:true,
+                type:"register",
+                password:null,
+                icon:userinfo.picture
+            } as registerAuthJson, true, "5m");
+            
+            return res.redirect(`${env.FRONTEND_BASE_URI}/register/complete/${token}`)
 
-            } else {
-                
-                const token = registerJwt({
-                    name:userinfo.given_name,
-                    email:userinfo.email,
-                    checkout:true,
-                    type:"register",
-                    password:null,
-                    icon:userinfo.picture
-                } as registerAuthJson, true, "5m");
-                
-                return res.redirect(`${env.FRONTEND_BASE_URI}/register/complete/${token}`)
-
-            }
         }
-        
-    } catch (err) {
+    } else {
         return res.status(400).json({
             status:404,
             message:"Bad Requests"
         })
     }
+    
 }
