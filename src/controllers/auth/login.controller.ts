@@ -85,7 +85,6 @@ export async function confirmLoginToken(req:Request<{}, {}, {code:string, token:
             });                
         }
     } catch (err) {
-        console.log("DEU BOSTA", err);
         
         return res.status(500).json({
             status: 500,

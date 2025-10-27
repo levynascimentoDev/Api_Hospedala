@@ -2,7 +2,7 @@ import './src/configs/env.js';
 import './src/database/db.js';
 import routes from './src/routes/routes.js';
 import cookieParser from 'cookie-parser';
-import express from 'express';
+import express, { type Response } from 'express';
 import cors from 'cors';
 
 const app = express();
@@ -17,6 +17,13 @@ app.use(cors({
 }));
 
 app.use('/api', routes);
+
+app.use((_, res:Response) => {
+  res.status(404).json({
+    status:404,
+    error:"Bad Requests, Route Not Found"
+  })
+});
 
 app.listen(env.PORT, () => {
   console.log("server iniciado! na porta " + env.PORT);

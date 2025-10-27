@@ -109,7 +109,7 @@ export async function confirmRegisterToken(req:Request<{}, {}, {code:string, tok
         
         return res.status(500).json({
             status: 500,
-            message: "Api Error",
+            message: "Bad Requests",
         })
     }
 }
