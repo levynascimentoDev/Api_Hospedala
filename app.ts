@@ -1,9 +1,9 @@
-import express from 'express'
+import './src/configs/env.js';
+import './src/database/db.js';
 import routes from './src/routes/routes.js';
-import cookieParser from 'cookie-parser'
-import cors from 'cors'
-import './src/configs/env.js'
-import './src/database/db.js'
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import cors from 'cors';
 
 const app = express();
 
@@ -13,6 +13,7 @@ app.use(cookieParser());
 app.use(cors({
   origin:env.FRONTEND_BASE_URI,
   credentials: true,    
+  methods:['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 }));
 
 app.use('/api', routes);
