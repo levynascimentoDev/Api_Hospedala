@@ -1,77 +1,46 @@
 
-export type Token =  {
-    status:number;
-    token:string;
-    type?:string;
-}
-
-export interface UserRequest {
-    email:string;
-    password:string;
-}
-
-
 export interface BadRequests {
     status:number;
     message:string;
 }
 
-export interface checkoutToken {
-    email:string;
-    type:string;
-    code:string
-    iat:number;
-    exp:number;
-}
+// USER REQUESTS INTERFACES
 
 export interface User {
     id:number;
-    name:string;
+    given_name:string;
+    family_name:string;
     email:string;
-    password:string;
-    icon:string;
-    admin:boolean;
-}
-
-export type UserResponse = {
-    id:number;
-    name:string;
-    email:string;
-    icon?:string | null;
-    admin:boolean;
-}
-
-export interface Payload {
-    id:number;
-    name:string;
-    email:string;
-    icon?:string;
-    admin:boolean;
-    iat: number;
-    exp: number;
+    birth_date:string;
+    icon?:string | undefined | null;
+    role:"host" | "user" | "admin";
 }
 
 export interface userCreate {
-    name:string;
+    given_name:string;
+    family_name:string;
     email:string;
-    password:string;
-    icon?:string | null;
-    admin:boolean;
+    birth_date:string;
+    icon?:string | undefined | null;
+    role:"host" | "user" | "admin";
 }
 
-export interface loginAuthJson {
+export interface payloadAcess {
+    user_id:number;
+    session_id:string;
+}
+
+// TOKENS REQUESTS INTERFACES
+
+
+export interface TokenAuthJson {
     email:string;
-    type:"register" | "login" | "forgot-password";
+    type:"auth" | "oauth";
     code?:string;
+    given_name?:string;
 }
 
-export interface registerAuthJson extends loginAuthJson {
-    name:string | null;
-    password:string | null;
-    checkout:boolean;
-    icon?:string | null;
-}
-
+// GOOGLE REQUETS INTERFACES
 
 export interface googleAuthorization {
     access_token:string;
@@ -92,4 +61,14 @@ export interface googleUserinfo {
     picture:string;
     locale:string;
 }
+
+// SESSION INTERFACES
+
+export interface Session {
+    id:string;
+    refresh_token_hash:string;
+    expire_at:Date | string,
+    user_id:number
+}
+
 

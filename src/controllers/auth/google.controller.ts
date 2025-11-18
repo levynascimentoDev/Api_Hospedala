@@ -1,9 +1,11 @@
-import type { registerAuthJson, googleUserinfo } from "../../utils/types.js"
+import type { googleUserinfo } from "../../utils/types.js"
 import { getUserbyEmail } from "../../database/models/user.model.js"
 import { getPayloadGoogleApi } from "../../utils/google.js"
 import type { Request, Response } from "express"
 import { registerJwt } from "../../utils/jwt.js"
-
+import { createNewSession } from "../../database/models/session.model.js"
+import { generateHash } from "../../utils/cript.js"
+import crypto from 'crypto'
 
 
 
@@ -40,27 +42,73 @@ export async function googleAuthCallback(req:Request, res:Response) {
             const user = await getUserbyEmail(userinfo.email);
             
             if (user) {
-                const authToken = registerJwt(user, false, "3d");
-                res.cookie('auth_token', authToken, { 
-                    httpOnly:true,
-                    secure:true,
-                    sameSite:"strict",
-                    maxAge:3 * 24 * 60 * 60 * 1000
-                });
-                return res.redirect(env.FRONTEND_BASE_URI+'/home')
+
+                const expire_at = new Date();
+                expire_at.setDate(expire_at.getDate() + 7);
+                const refresh = crypto.randomBytes(16).toString('hex');
+                
+                console.log(expire_at)
+
+                const newRefreshToken = await createNewSession(crypto.randomUUID(), {
+                    user_id:user.id as number,
+                    refresh_token_hash:await generateHash(refresh) as string,
+                    expire_at:expire_at
+                })
+                
+                const refreshToken = registerJwt({
+                    session_id:newRefreshToken.id,
+                    refresh_token:refresh
+                }, false, "7d");
+        
+        
+                // CREATE ACESS TOKEN
+        
+                const acessToken = registerJwt({
+                    user_id:user.id,
+                    session_id:newRefreshToken.id
+                }, false, '15m');
+        
+        
+                // SET COOKIES
+                    // (refresh)
+                res.cookie(
+                    'uuid_refresh',
+                    refreshToken,
+                    {
+                        httpOnly:true,
+                        secure:false,
+                        sameSite:"strict",    
+                        maxAge:7 * 24 * 60 * 60 * 1000
+                    }
+                )
+                    // (acess)
+                res.cookie(
+                    'acess_auth',
+                    acessToken,
+                    {
+                        httpOnly:true,
+                        secure:false,
+                        sameSite:"strict" ,
+                        maxAge:15 * 60 * 1000   
+                    }
+                )
+                return res.redirect(env.FRONTEND_BASE_URI)
 
             } else {
                 
                 const token = registerJwt({
-                    name:userinfo.given_name,
                     email:userinfo.email,
-                    checkout:true,
-                    type:"register",
-                    password:null,
-                    icon:userinfo.picture
-                } as registerAuthJson, true, "5m");
+                    name:userinfo.given_name,
+                    type:"oauth",
+                }, true, "5m");
                 
-                return res.redirect(`${env.FRONTEND_BASE_URI}/register/complete/${token}`)
+                res.cookie('temp_auth', token ,{
+                    httpOnly:true,
+                    secure:false,
+                    sameSite:"strict",
+                })
+                
+                return res.redirect(`${env.FRONTEND_BASE_URI}/login/complete`)
 
             }
         } else {
@@ -70,6 +118,7 @@ export async function googleAuthCallback(req:Request, res:Response) {
             })
         }
     } catch (error) {
+        console.log(error)
         return res.status(400).json({
             status:404,
             message:"Bad Requests"

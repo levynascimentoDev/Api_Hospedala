@@ -1,19 +1,11 @@
 import { Request } from "express";
-import type { loginAuthJson, registerAuthJson } from "./src/utils/types";
+import type { loginAuthJson, registerAuthJson, User } from "./src/utils/types";
 
 declare module "express-serve-static-core" {
     export interface Request {
-        user?: {
-            id:number;
-            email:string;
-            name:string;
-            icon?:string;
-            admin:boolean
-
-            iat: number;
-            exp: number;
-        };
-        token_auth:string;
+        user?: User;
+        temp_auth:string;
+        session_id:string
     }
 
 }

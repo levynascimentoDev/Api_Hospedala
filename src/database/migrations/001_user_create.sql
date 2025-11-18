@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS users(
-    id INT NOT NULL UNIQUE PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    id INT NOT NULL PRIMARY KEY,
+    given_name VARCHAR(50) NOT NULL,
+    family_name VARCHAR(50) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
     icon VARCHAR(300),
-    admin BOOLEAN NOT NULL DEFAULT FALSE
+    birth_date DATE NOT NULL,
+    role ENUM('host', 'user', 'admin') NOT NULL
 );

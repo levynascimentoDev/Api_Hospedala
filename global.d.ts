@@ -8,7 +8,11 @@ declare global {
         EMAIL:string;
         FRONTEND_BASE_URI:string;
         REDIRECT_URI_GOOGLE:string;
-        DATABASE_URI:string;
+        DB_USER:string;
+        DB_PASSWORD:string;
+        DB_HOST:string;
+        DB_NAME:string;
+        DB_PORT:number;
         PORT:number;
     };
 }

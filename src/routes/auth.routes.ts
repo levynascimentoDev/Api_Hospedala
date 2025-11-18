@@ -1,30 +1,22 @@
-import { authRegister, confirmRegisterToken, registerName, registerComplete, forgotPassword } from "../controllers/auth/register.controller.js";
+import { refreshCode, refreshToken, tokenCodeVerify, tokenCompleteInfo } from "../controllers/auth/tokens.controller.js";
 import { googleAuth, googleAuthCallback } from "../controllers/auth/google.controller.js";
-import { authLogin, confirmLoginToken } from "../controllers/auth/login.controller.js";
-import { verifyLoginToken, verifyRegisterToken, refreshToken } from "../controllers/auth/tokens.controller.js";
-import { AuthToken } from "../middlewares/auth.js";
+import { authLogin, checkCode, registerComplete } from "../controllers/auth/login.controller.js";
+import { AuthRefresh, AuthToken } from "../middlewares/auth.js";
 import { Router } from "express";
 
 const authRoutes = Router()
 
-// POST (login)
+// POST
 authRoutes.post("/login", authLogin);    
-authRoutes.post('/login/verify', confirmLoginToken);
-
-// POST (register)
-authRoutes.post("/register", authRegister);    
-authRoutes.post('/register/verify', confirmRegisterToken);
-authRoutes.post('/register/username', registerName);
-authRoutes.post('/register/complete', registerComplete);
+authRoutes.post("/register", AuthToken, registerComplete);    
+authRoutes.post('/code', AuthToken, checkCode);
 
 // GET
-authRoutes.get('/login/tokens', AuthToken, verifyLoginToken);
-authRoutes.get('/register/tokens', AuthToken, verifyRegisterToken);
+authRoutes.get('/tokens/verify_code', AuthToken, tokenCodeVerify);
+authRoutes.get('/tokens/complete_info', AuthToken, tokenCompleteInfo);
+authRoutes.get('/refresh/token', AuthRefresh, refreshToken);
+authRoutes.get('/refresh/code', AuthToken, refreshCode);
 authRoutes.get('/google', googleAuth);
 authRoutes.get('/google/callback', googleAuthCallback);
-
-// PATCH
-authRoutes.patch('/token/refresh', refreshToken);
-authRoutes.patch('/login/forgot-password', AuthToken, forgotPassword);
 
 export default authRoutes;

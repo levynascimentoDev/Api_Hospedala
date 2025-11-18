@@ -12,6 +12,10 @@ globalThis.env = {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
     REDIRECT_URI_GOOGLE: process.env.REDIRECT_URI_GOOGLE as string,
-    DATABASE_URI: process.env.DATABASE_URI as string,
+    DB_HOST: process.env.DB_HOST as string,
+    DB_NAME: process.env.DB_NAME as string,
+    DB_USER: process.env.DB_USER as string,
+    DB_PASSWORD: process.env.DB_PASSWORD as string,
+    DB_PORT: parseInt(process.env.DB_PORT as string) as number,
     PORT: parseInt(process.env.PORT as string) as number
 }

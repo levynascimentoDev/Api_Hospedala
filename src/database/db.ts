@@ -7,7 +7,15 @@ import fs from 'node:fs'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const db = mysql.createConnection(env.DATABASE_URI);
+
+const db = mysql.createConnection({
+    host:env.DB_HOST,
+    port:env.DB_PORT,
+    user:env.DB_USER,
+    password:env.DB_PASSWORD,
+    database:env.DB_NAME,
+    multipleStatements:true
+});
 
 db.connect(err => {
     if (err) return console.log("Erro ao conectar no banco e dados!", err);
@@ -15,8 +23,8 @@ db.connect(err => {
     const DirPath = path.join(__dirname, 'migrations');
     fs.readdirSync(DirPath).forEach(file => {
         const contentFile = fs.readFileSync(path.join(DirPath, file), 'utf-8')
-        db.execute(contentFile, err => {
-            if (err) return console.log(`Erro ao executar Migration ${file}`);
+        db.query(contentFile, err => {
+            if (err) return console.log(`Erro ao executar Migration ${file}`, err);
         })
     })
 })
