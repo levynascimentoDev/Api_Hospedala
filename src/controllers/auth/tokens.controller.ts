@@ -61,7 +61,6 @@ export async function refreshCode(req:Request<{}, {}, {token:string}>, res:Respo
 
 export async function refreshToken(req:Request<{}, {}, {token:string}>, res:Response) {
     try {
-        console.log("check")
         const session = await getSessionByID(req.session_id)
         const user = await getUserbyID(session?.user_id as number)
 
@@ -128,7 +127,6 @@ export async function tokenCompleteInfo(req:Request, res:Response<BadRequests>) 
 
         
         const payload = getPayloadJwt<TokenAuthJson>(req.temp_auth, true);
-        console.log(payload)
 
         if (payload && !Object.keys(payload).includes("token")) {
             return res.json({

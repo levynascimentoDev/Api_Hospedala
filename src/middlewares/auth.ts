@@ -9,10 +9,8 @@ export async function AuthUser(req:Request, res:Response, next:NextFunction) {
         const token = req.cookies.acess_auth as string        
         const payload = getPayloadJwt(token, false) as payloadAcess 
         const user = await getUserbyID(payload.user_id) as User;
-        console.log(payload.session_id)
         const session = await getSessionByID(payload.session_id) as Session;
 
-        console.log(!token || !user || !session)
 
         if (!token || !user || !session) {
 
@@ -51,7 +49,7 @@ export async function AuthUser(req:Request, res:Response, next:NextFunction) {
 
 export async function AuthToken(req:Request, res:Response, next:NextFunction) {
     try {
-        const token = req.cookies.temp_auth as string
+        const token = req.cookies.  temp_auth as string
         
         if (token) {
             const payload = getPayloadJwt(token.trim(), true) 
@@ -88,7 +86,6 @@ export async function AuthRefresh(req:Request, res:Response, next:NextFunction) 
         
         if (token) {
             const payload = getPayloadJwt<{session_id:string, refresh_token:string}>(token, false); 
-            console.log(payload)
             if (!payload) { 
                 return res.status(401).json({
                     status:401,

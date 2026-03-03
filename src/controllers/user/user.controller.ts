@@ -19,19 +19,14 @@ export async function getUsersApi(req:Request, res:Response) {
 
 export async function userLogout(req:Request, res:Response<{status:number, message:string}>) {
     try {
-        console.log("entrou")
         const payload = getPayloadJwt<payloadAcess>(req.cookies.acess_auth, false);
 
-        console.log("sessao deletada")
         
         res.clearCookie('acess_auth', {
             httpOnly:true,
             secure:false,
             sameSite:"strict",
         })
-        
-        console.log("cookie deletado acess")
-        
         
         res.clearCookie('uuid_refresh', {
             httpOnly:true,
@@ -46,7 +41,6 @@ export async function userLogout(req:Request, res:Response<{status:number, messa
         })
 
 
-        console.log("cookie deletado acess")
     } catch (err) {
         console.log(err)
         return res.status(401).json({

@@ -84,7 +84,6 @@ export async function registerComplete(req:Request, res:Response) {
         expire_at.setDate(expire_at.getDate() + 7);
         const refresh = crypto.randomBytes(16).toString('hex');
         
-        console.log(expire_at)
         
         const newRefreshToken = await createNewSession(crypto.randomUUID(), {
             user_id:newUser?.id as number,

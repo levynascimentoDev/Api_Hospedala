@@ -25,7 +25,7 @@ export async function getUserbyID(id:number): Promise<User | null> {
                 resolve(result[0] as User); 
             } else {
                 resolve(null);
-            }
+            } 
         });
     });
 }
