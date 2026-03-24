@@ -2,13 +2,14 @@ import '../configs/env.js'
 import { fileURLToPath } from 'node:url';
 import path from 'node:path'
 import mysql from 'mysql2'
+import type { Connection } from 'mysql2';
 import fs from 'node:fs'
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const db = mysql.createConnection({
+const db: Connection = mysql.createConnection({
     host:env.DB_HOST,
     port:env.DB_PORT,
     user:env.DB_USER,
