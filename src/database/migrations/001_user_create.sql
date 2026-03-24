@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS users(
     id INT NOT NULL PRIMARY KEY,
     given_name VARCHAR(50) NOT NULL,
