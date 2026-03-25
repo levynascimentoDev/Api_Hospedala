@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production bun run dist/app.js",
+    "start": "NODE_ENV=production bun run app.ts",
     "build": "tsc && node copy-files.js",
     "dev": "NODE_ENV=development bun run --watch app.ts"
   },
