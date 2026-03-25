@@ -19,6 +19,3 @@ globalThis.env = {
     DB_PORT: parseInt(process.env.DB_PORT as string) as number,
     PORT: parseInt(process.env.PORT as string) as number
 }
-
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_HOST:", env.DB_HOST);

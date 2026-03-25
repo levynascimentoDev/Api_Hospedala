@@ -29,5 +29,5 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-  "exclude": ["copy-files.js"]
+  "exclude": ["node-modules", "dist"]
 }
