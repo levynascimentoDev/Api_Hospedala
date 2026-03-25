@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getPlaces } from "../controllers/auth/host.controller";
+import { getPlaces } from "../controllers/auth/host.controller.js";
 
 const hostRoutes = Router();
 
