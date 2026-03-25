@@ -3,7 +3,7 @@ import db from '../db.js';
 
 export async function getUserbyEmail(email:string): Promise<User | null> {
     return new Promise((resolve, reject) => {
-        db.execute('SELECT * FROM users WHERE email = ?;', [email],
+        db.query('SELECT * FROM users WHERE email = ?;', [email],
         (err:any, result:any[]) => {
             if (err) return reject(err as Error);
             if (result.length >= 1) {
@@ -18,7 +18,7 @@ export async function getUserbyEmail(email:string): Promise<User | null> {
 
 export async function getUserbyID(id:number): Promise<User | null> {
     return new Promise((resolve, reject) => {
-        db.execute('SELECT * FROM users WHERE id = ?;', [id],
+        db.query('SELECT * FROM users WHERE id = ?;', [id],
         (err:any, result:any[]) => {
             if (err) return reject(err as Error);
             if (result.length >= 1) {
@@ -32,9 +32,9 @@ export async function getUserbyID(id:number): Promise<User | null> {
 
 
 
-export async function createUser(id: number, payload: userCreate): Promise<User | undefined> {
+export async function createUser(id: number, payload: userCreate): Promise<User | null> {
   return new Promise((resolve, reject) => {
-    db.execute(
+    db.query(
       'INSERT INTO users(id, given_name, family_name, birth_date, email, icon, role) VALUES(?, ?, ?, ?, ?, ?, ?);',
       [id, payload.given_name, payload.family_name, payload.birth_date, payload.email, payload.icon, payload.role],
       (err: any) => {
@@ -55,7 +55,7 @@ export async function createUser(id: number, payload: userCreate): Promise<User 
 
 export async function alterUserbyEmail(email:string, options:{given_name?:string; family_name:string;  icon?:string; email?:string; role?:"user" | "host" | "admin";}): Promise<void> {
   return new Promise((resolve, reject) => {
-    db.execute(
+    db.query(
       `UPDATE users SET ${Object.keys(options).map(value => `${value} = ?`).join(", ")} WHERE email = '${email}';`,
       Object.values(options),
       (err: any) => {
