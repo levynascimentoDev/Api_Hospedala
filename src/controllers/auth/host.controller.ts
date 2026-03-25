@@ -1,6 +1,6 @@
 import type { Response, Request } from "express"
-import { getAllPlaces, getPlaceMedia } from "../../database/models/places.model"
-import type { Place } from "../../utils/types/hosts";
+import { getAllPlaces, getPlaceMedia } from "../../database/models/places.model.js"
+import type { Place } from "../../utils/types/hosts.js";
 
 export async function getPlaces(_:Request, res:Response) {
     try {
