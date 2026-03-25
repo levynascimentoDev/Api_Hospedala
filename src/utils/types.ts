@@ -21,7 +21,7 @@ export interface userCreate {
     family_name:string;
     email:string;
     birth_date:string;
-    icon?:string | undefined | null;
+    icon?:string | null;
     role:"host" | "user" | "admin";
 }
 
