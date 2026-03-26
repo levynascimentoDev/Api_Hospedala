@@ -22,6 +22,7 @@ export async function getPlaces(_:Request, res:Response) {
         return res.status(200).json(response);
 
     } catch (err) {
+        console.log(err)
         return res.status(500).json({
             status:500,
             message:"Bad Requests"
