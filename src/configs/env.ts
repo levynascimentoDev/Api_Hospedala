@@ -1,8 +1,3 @@
-import { config } from "dotenv";
-
-
-config({ path:'.env' });
-config({ path: process.env.NODE_ENV === 'development' ? '.env.development' : '.env.production' });
 globalThis.env = {
     SECRET_KEY_AUTH: process.env.SECRET_KEY_AUTH as string,
     FRONTEND_BASE_URI: process.env.FRONTEND_BASE_URI as string,
