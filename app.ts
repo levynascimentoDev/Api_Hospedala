@@ -25,6 +25,7 @@ app.use((_, res:Response) => {
   })
 });
 
+
 app.listen(env.PORT, () => {
   console.log("server iniciado! na porta " + env.PORT);
 })

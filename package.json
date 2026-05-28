@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "bun --env-file=.env --env-file=.env.production run app.ts",
-    "dev": " bun run bun --env-file=.env --env-file=.env.developement --watch app.ts"
+    "start": "bun run --env-file=.env --env-file=.env.production app.ts",
+    "dev": " bun run --env-file=.env --env-file=.env.developement --watch app.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
