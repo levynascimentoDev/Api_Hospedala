@@ -1,16 +1,24 @@
 import { type Response, type Request , type NextFunction} from "express";
-import { getUserbyID } from "../database/models/user.model.js";
-import type { payloadAcess, Session, User } from "../utils/types.js";
-import { getPayloadJwt } from "../utils/jwt.js";
-import { deleteSessionByID, getSessionByID } from "../database/models/session.model.js";
+import type { payloadAcess, Session, User } from "../types/index.js";
+import SesssionModel from "../database/models/session.model.js";
+import UserModel from "../database/models/user.model.js";
+import Jwt from "../utils/jwt.js";
+
 
 export async function AuthUser(req:Request, res:Response, next:NextFunction) {
     try {
-        const token = req.cookies.acess_auth as string        
-        const payload = getPayloadJwt(token, false) as payloadAcess 
-        const user = await getUserbyID(payload.user_id) as User;
-        const session = await getSessionByID(payload.session_id) as Session;
 
+        const token = req.cookies.acess_auth as string        
+        const payload = Jwt.decode<payloadAcess>(token) as payloadAcess;  
+        if (!payload) {
+            return res.status(401).json({
+                status:401,
+                message:"Not Authorized"
+            })
+        }
+
+        const user = await UserModel.getUserbyID(payload.user_id) as User;
+        const session = await SesssionModel.getByID(payload.session_id) as Session;
 
         if (!token || !user || !session) {
 
@@ -34,14 +42,14 @@ export async function AuthUser(req:Request, res:Response, next:NextFunction) {
         }
         
         req.user = user as User;
-
         return next()
 
-
     }  catch (err) {
-        return res.status(401).json({
-            status:401,
-            message:"Unthorized"
+
+        console.log(err)
+        return res.status(500).json({
+            status:500,
+            message:"Internal Server Error"
         })
     }
 }
@@ -49,11 +57,11 @@ export async function AuthUser(req:Request, res:Response, next:NextFunction) {
 
 export async function AuthToken(req:Request, res:Response, next:NextFunction) {
     try {
-        const token = req.cookies.  temp_auth as string
+        const token = req.cookies.temp_auth  as string
         
         if (token) {
-            const payload = getPayloadJwt(token.trim(), true) 
             
+            const payload = Jwt.decode(token.trim()) 
             if (!payload) { 
                 return res.status(401).json({
                     status:401,
@@ -62,7 +70,7 @@ export async function AuthToken(req:Request, res:Response, next:NextFunction) {
             }
             
             req.temp_auth = token;
-            return next()
+            return next();
 
         } else {
             return res.status(401).json({
@@ -71,9 +79,9 @@ export async function AuthToken(req:Request, res:Response, next:NextFunction) {
             })    
         }
     }  catch (err) {
-        return res.status(401).json({
-            status:401,
-            message:"Unthorized"
+        return res.status(500).json({
+            status:500,
+            message:"Internal Server Error"
         })
     }
 }
@@ -85,7 +93,7 @@ export async function AuthRefresh(req:Request, res:Response, next:NextFunction) 
         const token = req.cookies.uuid_refresh as string
         
         if (token) {
-            const payload = getPayloadJwt<{session_id:string, refresh_token:string}>(token, false); 
+            const payload = Jwt.decode<{session_id:string, refresh_token:string}>(token); 
             if (!payload) { 
                 return res.status(401).json({
                     status:401,
@@ -94,13 +102,13 @@ export async function AuthRefresh(req:Request, res:Response, next:NextFunction) 
             }
 
 
-            const session = await getSessionByID(payload.session_id);            
+            const session = await SesssionModel.getByID(payload.session_id);            
             const dateExpire = new Date(session?.expire_at as string);
             
             
             if (session && dateExpire < new Date()) {
 
-                await deleteSessionByID(session.id);
+                await SesssionModel.delete(session.id);
 
                 res.clearCookie('acess_auth', {
                     httpOnly:true,
@@ -132,9 +140,9 @@ export async function AuthRefresh(req:Request, res:Response, next:NextFunction) 
         }
     }  catch (err) {
         console.log(err)
-        return res.status(401).json({
-            status:401,
-            message:"Unthorized"
+        return res.status(500).json({
+            status:500,
+            message:"Internal Server Error"
         })
     }
 }

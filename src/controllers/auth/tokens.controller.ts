@@ -1,26 +1,25 @@
-import type { BadRequests, TokenAuthJson } from "../../utils/types.js";
-import { getPayloadJwt, registerJwt } from "../../utils/jwt.js";
+import type { TokenAuthTemp } from "../../types/index.js";
+import Jwt from "../../utils/jwt.js";
 import { generateCode } from "../../utils/functions.js";
 import type { Request, Response } from "express";
 import { sendEmail } from "../../utils/mail.js";
-import { getSessionByID } from "../../database/models/session.model.js";
-import { getUserbyID } from "../../database/models/user.model.js";
+import SesssionModel from "../../database/models/session.model.js";
+import UserModel from "../../database/models/user.model.js";
 
 
 export async function refreshCode(req:Request<{}, {}, {token:string}>, res:Response) {
     try {
 
-        const payload = await getPayloadJwt(req.temp_auth, true) as TokenAuthJson;
+        const payload = Jwt.decode<TokenAuthTemp>(req.temp_auth);
 
-        if (payload && payload.type == "auth") {
+        if (payload && payload.action == "checkout") {
             const newCode = generateCode() as string
             await sendEmail(payload.email, newCode as string);
         
-            const newTokenCode = await registerJwt({
-                email:payload.email,
-                code:payload.code,
-                type:payload.type
-            }, true, '5m')
+            const newTokenCode = Jwt.create({
+                ...payload,
+                code:newCode
+            }, "10m")
 
 
             res.clearCookie('temp_auth', {
@@ -44,15 +43,15 @@ export async function refreshCode(req:Request<{}, {}, {token:string}>, res:Respo
             });
         } else {
             return res.status(404).json({
-                status:404,
-                message:"Not Found"
+                status:401,
+                message:"Bad Request"
             });
         }
     } catch (err) {
         
         return res.status(500).json({
             status: 500,
-            message: "Bad Requests",
+            message: "Internal Server Error",
         })
     } 
 }
@@ -61,13 +60,13 @@ export async function refreshCode(req:Request<{}, {}, {token:string}>, res:Respo
 
 export async function refreshToken(req:Request<{}, {}, {token:string}>, res:Response) {
     try {
-        const session = await getSessionByID(req.session_id)
-        const user = await getUserbyID(session?.user_id as number)
+        const session = await SesssionModel.getByID(req.session_id)
+        const user = await UserModel.getUserbyID(session?.user_id as number)
 
-        const newToken = registerJwt({
+        const newToken = Jwt.create({
             user_id:user?.id,
             session_id:session?.id
-        }, false, '15m');
+        }, "15m");
         
         res.cookie('acess_auth', 
             newToken,
@@ -93,58 +92,24 @@ export async function refreshToken(req:Request<{}, {}, {token:string}>, res:Resp
     } 
 }
 
-export async function tokenCodeVerify(req:Request, res:Response<BadRequests>) {
+export async function tokenVerify(req:Request, res:Response) {
     try {
         
-        const payload = getPayloadJwt<TokenAuthJson>(req.temp_auth, true);
+        const payload = Jwt.decode<TokenAuthTemp>(req.temp_auth);
 
-        if (payload && payload.type == 'auth') {
-            return res.json({
-                status:200,
-                message:"Authorized"
-            })
-        } else {
-            return res.json({
-                status:200,
-                message:"Unauthorized"
-            })
-        }
-        
-    } catch (err) {
-
-        console.log(err)
-        return res.json({
+        return res.status(200).json({
             status:200,
-            message:"Unauthorized"
+            message:"Authorized",
+            action:payload?.action
         })
-
-    }
-}
-
-
-export async function tokenCompleteInfo(req:Request, res:Response<BadRequests>) {
-    try {
-
         
-        const payload = getPayloadJwt<TokenAuthJson>(req.temp_auth, true);
-
-        if (payload && !Object.keys(payload).includes("token")) {
-            return res.json({
-                status:200,
-                message:"Authorized"
-            })
-        } else {
-            return res.status(401).json({
-                status:401,
-                message:"Unauthorized"
-            })
-        }
         
     } catch (err) {
+
         console.log(err)
-        return res.json({
-            status:200,
-            message:"Unauthorized"
+        return res.status(500).json({
+            status:500,
+            message:"Internal Server Error"
         })
 
     }

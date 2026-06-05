@@ -5,8 +5,6 @@ import { Router } from "express";
 const userRoutes = Router();
 
 userRoutes.get("/me", AuthUser, getUsersApi);
-
-// DELETE
 userRoutes.delete('/logout', AuthUser, userLogout);
 
 export default userRoutes;

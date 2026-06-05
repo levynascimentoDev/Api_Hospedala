@@ -1,9 +1,9 @@
-import { createUser, getUserbyEmail } from "../../database/models/user.model.js";
-import { createNewSession } from "../../database/models/session.model.js";
-import type { TokenAuthJson, User, userCreate } from "../../utils/types.js";
+import UserModel from "../../database/models/user.model.js";
+import SesssionModel from "../../database/models/session.model.js";
+import type { TokenAuthTemp, User, userCreate } from "../../types/index.js";
 import { generateCode, generateID } from "../../utils/functions.js";
 import { generateHash } from "../../utils/cript.js";
-import {  getPayloadJwt, registerJwt } from "../../utils/jwt.js";
+import Jwt from "../../utils/jwt.js";
 import type { Request, Response } from "express";
 import { sendEmail } from "../../utils/mail.js";
 import crypto from 'crypto'
@@ -11,7 +11,7 @@ import crypto from 'crypto'
 export async function authLogin(req:Request<{}, {}, {email:string}>, res:Response) {
     try {
         const { email } = req.body ;
-        const user = await getUserbyEmail(email);
+        const user = await UserModel.getByEmail(email);
         const code:string = generateCode()
 
 
@@ -21,12 +21,13 @@ export async function authLogin(req:Request<{}, {}, {email:string}>, res:Respons
             await sendEmail(user.email as string, code, user.given_name)
         }
 
-        const token:string = registerJwt({
+        const payload:TokenAuthTemp = {
             email:req.body.email,
-            type:"auth",
-            code:code
-        } as TokenAuthJson, true, "5m");
+            code:code,
+            action:"checkout"   
+        } 
 
+        const token:string = Jwt.create(payload, "10m");
 
         res.cookie('temp_auth', token, {
             httpOnly:true,
@@ -48,7 +49,7 @@ export async function authLogin(req:Request<{}, {}, {email:string}>, res:Respons
     }
 }
 
-export async function registerComplete(req:Request, res:Response) {
+export async function authRegister(req:Request, res:Response) {
     try {
 
         const {
@@ -57,14 +58,11 @@ export async function registerComplete(req:Request, res:Response) {
             birth_date
         } = req.body;
         
-        const payload = getPayloadJwt<TokenAuthJson>(req.temp_auth, true);
+        const payload = Jwt.decode<TokenAuthTemp>(req.temp_auth as string) as TokenAuthTemp;
 
-        const email = payload?.email
-
-
-
-        if (!given_name || !family_name || !birth_date) return res.status(500).json({
-            status:500,
+        const { email } = payload;
+        if (!given_name || !family_name || !birth_date) return res.status(401).json({
+            status:401,
             message:"Bad Requests"
         })
 
@@ -79,30 +77,34 @@ export async function registerComplete(req:Request, res:Response) {
         
         
         // CREATE REFRESH TOKEN
-        const newUser = await createUser(generateID(), user);
+        const newUser = await UserModel.create(generateID(), user);
         const expire_at = new Date();
         expire_at.setDate(expire_at.getDate() + 7);
         const refresh = crypto.randomBytes(16).toString('hex');
         
         
-        const newRefreshToken = await createNewSession(crypto.randomUUID(), {
+        const newRefreshToken = await SesssionModel.create(crypto.randomUUID(), {
             user_id:newUser?.id as number,
             refresh_token_hash:await generateHash(refresh) as string,
             expire_at:expire_at
         })
 
-        const refreshToken = registerJwt({
-            session_id:newRefreshToken.id,
-            refresh_token:refresh
-        }, false, "7d");
-
+        const refreshToken = Jwt.create(
+            {
+                session_id:newRefreshToken.id,
+                refresh_token:refresh
+            },
+            "7d"
+        );
 
         // CREATE ACESS TOKEN
-
-        const acessToken = registerJwt({
-            user_id:newUser?.id,
-            session_id:newRefreshToken.id
-        }, false, '15m');
+        const acessToken = Jwt.create(
+            {
+                user_id:newUser?.id,
+                session_id:newRefreshToken.id
+            },
+            "15m"
+        );
 
 
         // SET COOKIES
@@ -146,32 +148,39 @@ export async function registerComplete(req:Request, res:Response) {
         console.log(err)
         return res.status(500).json({
             status:500,
-            message:"Bad Requests"
+            message:"Internal Server Error"
         })
     }
 }
 
 
-export async function checkCode(req:Request<{}, {}, {code:number}>, res:Response) {
+export async function checkCode(req:Request<{}, {}, {code:string}>, res:Response) {
     try {
         const { code } = req.body ;
 
-        const payload = getPayloadJwt<TokenAuthJson>(req.temp_auth as string, true);
+        const payload = Jwt.decode<TokenAuthTemp>(req.temp_auth as string);
     
 
         if (!code || !payload || !payload.code) {
-            return res.status(404).json({
+            return res.status(401).json({
                 status:404,
-                message:"Unthorized"
+                message:"Bad Request"
             })
         } else {
 
-            const newPayload:TokenAuthJson = {
-                email:payload.email,
-                type:payload.type,                
+            if (code != payload.code) {
+                return res.status(401).json({
+                    status:401,
+                    message:"Bad Request"
+                })
             }
 
-            const newToken = registerJwt(newPayload, false, '5m');
+            const newPayload:TokenAuthTemp = {
+                email:payload.email,
+                action:"complete",                
+            }
+
+            const newToken = Jwt.create(newPayload, "5m");
 
             res.clearCookie('temp_auth', {
                 httpOnly:true,
@@ -196,7 +205,7 @@ export async function checkCode(req:Request<{}, {}, {code:number}>, res:Response
         console.log(err)
         return res.status(500).json({
             status: 500,
-            message: "Bad Requests",
+            message: "Internal Server Error",
         })
     }
 }

@@ -7,7 +7,7 @@ declare global {
         EMAIL_SECRET:string;
         EMAIL:string;
         FRONTEND_BASE_URI:string;
-        REDIRECT_URI_GOOGLE:string;
+        REDIRECT_URI_GOOGLE:string; 
         DB_USER:string;
         DB_PASSWORD:string;
         DB_HOST:string;

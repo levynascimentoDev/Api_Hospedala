@@ -1,18 +1,30 @@
 import jwt from "jsonwebtoken";
 
-export function registerJwt(payload:object, forurl:boolean, expire: `${number}${"s" | "m" | "h" | "d"}`): string {
 
-    const token:string = jwt.sign(payload, forurl ? env.SECRET : env.SECRET_KEY_AUTH , { expiresIn: expire }) as string;
+class Jwt {
+    static create(payload:Object, expire:`${number}${"s" | "m" | "h" | "d"}`): string {
+        const token:string = jwt.sign(
+            payload,
+            env.SECRET_KEY_AUTH , 
+            { expiresIn:expire }
+        ) as string;
 
-    return token;
+        return token;
+    }
+
+    static decode<T>(token:string): T | null {
+        try {
+            
+            const payload = jwt.verify(token, env.SECRET_KEY_AUTH);
+            return payload as T;
+        } catch (err) {
+            return null;
+        }
+        
+    }
+
+    
 }
 
-export function getPayloadJwt<Types>(code:string, forurl:boolean) : Types | undefined {
-    try {
-        const token = jwt.verify(code, forurl ? env.SECRET : env.SECRET_KEY_AUTH);
-        return token as Types;
-    } catch (err) {
-        return undefined;
-    }
-} 
+export default Jwt;
 

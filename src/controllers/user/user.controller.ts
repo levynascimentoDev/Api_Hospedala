@@ -1,11 +1,13 @@
-import { getUserbyEmail } from "../../database/models/user.model.js";
 import type { Request, Response } from "express";
-import { getPayloadJwt } from "../../utils/jwt.js";
-import type { payloadAcess } from "../../utils/types.js";
-import { deleteSessionByID } from "../../database/models/session.model.js";
+import Jwt from "../../utils/jwt.js";
+import type { payloadAcess } from "../../types/index.js";
+import UserModel from "../../database/models/user.model.js";
+import SesssionModel from "../../database/models/session.model.js";
+
+
 
 export async function getUsersApi(req:Request, res:Response) {
-    const user = await getUserbyEmail(req.user?.email as string);
+    const user = await UserModel.getByEmail(req.user?.email as string);
     
     return res.status(200).json({
         id:user?.id as number,
@@ -19,7 +21,7 @@ export async function getUsersApi(req:Request, res:Response) {
 
 export async function userLogout(req:Request, res:Response<{status:number, message:string}>) {
     try {
-        const payload = getPayloadJwt<payloadAcess>(req.cookies.acess_auth, false);
+        const payload = Jwt.decode<payloadAcess>(req.cookies.acess_auth);
 
         
         res.clearCookie('acess_auth', {
@@ -34,7 +36,7 @@ export async function userLogout(req:Request, res:Response<{status:number, messa
             sameSite:"strict",
         })
         
-        await deleteSessionByID(payload?.session_id as string);
+        await SesssionModel.delete(payload?.session_id as string);
         return res.status(200).json({
             status:200,
             message:"User has ben logouted"

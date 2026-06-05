@@ -1,12 +1,12 @@
 import './src/configs/env.js';
 import './src/database/db.js';
-import routes from './src/routes/routes.js';
+import routes from './src/routes';
 import cookieParser from 'cookie-parser';
 import express, { type Response } from 'express';
 import cors from 'cors';
 
-const app = express();
 
+const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
@@ -16,7 +16,7 @@ app.use(cors({
   methods:['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 }));
 
-app.use('/api', routes);
+app.use(routes);
 
 app.use((_, res:Response) => {
   res.status(404).json({

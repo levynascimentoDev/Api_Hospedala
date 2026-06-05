@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "bun run --env-file=.env --env-file=.env.production app.ts",
-    "dev": " bun run --env-file=.env --env-file=.env.developement --watch app.ts"
+    "start": "bun run app.ts",
+    "dev": "NODE_ENV=development bun run --watch app.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -18,7 +18,7 @@
   "peerDependencies": {
     "typescript": "^5.9.3"
   },
-  "dependencies": {
+  "dependencies": { 
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",

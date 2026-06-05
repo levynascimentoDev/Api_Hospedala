@@ -18,7 +18,6 @@ export async function sendEmail(email:string, code:string, username?:string) {
     }
     
     await transporter.sendMail({
-        // from:`"Hospedala" <no-reply@hospedala.com>`,
         from:env.EMAIL,
         to:email,
         subject:"Verificação de email",

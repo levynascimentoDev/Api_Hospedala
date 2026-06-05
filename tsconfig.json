@@ -17,6 +17,8 @@
     "verbatimModuleSyntax": true,
     "noEmit": false,
 
+    "typeRoots": ["./src/types"],
+
     // Best practices
     "strict": true,
     "skipLibCheck": true,

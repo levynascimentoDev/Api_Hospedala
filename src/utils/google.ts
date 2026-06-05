@@ -1,4 +1,4 @@
-import type { googleAuthorization, googleUserinfo } from './types.js';
+import type { googleAuthorization, googleUserinfo } from '../types/index.js';
 import axios from 'axios'
 
 export async function getPayloadGoogleApi(code:string) : Promise<googleUserinfo>{
