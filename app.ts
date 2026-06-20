@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin:env.FRONTEND_BASE_URI,
+  origin:process.env.FRONTEND_BASE_URI,
   credentials: true,    
   methods:['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 }));
@@ -26,6 +26,6 @@ app.use((_, res:Response) => {
 });
 
 
-app.listen(env.PORT, () => {
-  console.log("server iniciado! na porta " + env.PORT);
+app.listen(process.env.PORT, () => {
+  console.log("server iniciado! na porta " + process.env.PORT);
 })

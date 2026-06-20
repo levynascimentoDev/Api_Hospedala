@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getPlaces } from "../controllers/auth/host.controller.js";
+import { HostController } from "../controllers/hosts/host.controller.js";
 
 const hostRoutes = Router();
 
-hostRoutes.get('/places', getPlaces);
+hostRoutes.get('/places', HostController.getPlaces);
 
 export default hostRoutes;

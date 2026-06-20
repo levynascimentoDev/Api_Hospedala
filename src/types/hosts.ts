@@ -22,3 +22,18 @@ export interface PlaceMedia extends RowDataPacket{
     url:string;
     place_id:string;
 }
+
+
+type ISODateString = `${number}-${number}-${number}`
+
+export interface QueryPlaces {
+    city?:string;
+    state?:string;
+    query?:string;
+    checkin:ISODateString;
+    checkout:ISODateString;
+    adult:number;
+    children:number;
+    baby:number;
+    animal:number;
+}
