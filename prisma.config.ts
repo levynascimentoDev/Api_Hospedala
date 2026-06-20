@@ -1,0 +1,11 @@
+import { defineConfig } from "prisma/config";
+import './src/configs/env'
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  datasource: {
+    url: process.env.DATABASE_URI,
+  },
+});

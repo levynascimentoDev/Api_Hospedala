@@ -1,14 +1,16 @@
 import type { Place, PlaceMedia } from '../../types/hosts.js';
-import db from '../db.js'
+import { prisma } from '../db.js';
+
 
 
 class PlaceModel {
-    static async getAll() : Promise<Place[] | null>{
+    static async getAll() {
 
         
         try {
-            const [places] = await db.query<Place[]>(`SELECT * FROM places;`)
-            return places ?? null;
+
+            const places = await prisma.places.findMany();
+            return places;
         
         } catch (error) {
             return null
@@ -16,15 +18,16 @@ class PlaceModel {
 
     }
 
-    static async getMediaByPlaceID(place_id:string) : Promise<PlaceMedia | null>{
+    static async getMediaByPlaceID(place_id:string) {
         
 
         try {
-            const [place] = await db.query<PlaceMedia[]>(
-                `SELECT * FROM media_places WHERE place_id = ? LIMIT 1;`,
-                [place_id]
-            );
-            return place[0] ?? null
+            const place = await prisma.places.findUnique({
+                where:{
+                    id:place_id
+                }
+            })
+            return place;
         } catch (error) {
             return null
         }

@@ -5,7 +5,11 @@
   "private": true,
   "scripts": {
     "start": "bun run app.ts",
-    "dev": "NODE_ENV=development bun run --watch app.ts"
+    "dev": "NODE_ENV=development bun run --watch app.ts",
+    "migrate": "bunx prisma migrate deploy",
+    "migrate:dev": "NODE_ENV=development bunx prisma migrate dev",
+    "migrate:reset":"NODE_ENV=development bunx prisma migrate reset",
+    "generate":"bunx prisma generate"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -13,20 +17,22 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/nodemailer": "^7.0.2"
+    "@types/nodemailer": "^7.0.2",
+    "prisma": "^7.8.0"
   },
   "peerDependencies": {
     "typescript": "^5.9.3"
   },
-  "dependencies": { 
+  "dependencies": {
+    "@prisma/adapter-mariadb": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.15.2",
     "nodemailer": "^7.0.9"
   }
 }

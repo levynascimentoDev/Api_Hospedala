@@ -1,41 +1,29 @@
 import '../configs/env.js'
-import { fileURLToPath } from 'node:url';
-import path from 'node:path'
-import mysql from 'mysql2/promise'
-import fs from 'node:fs'
+import { PrismaClient } from '../../generated/prisma/client.js';
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const adapter = new PrismaMariaDb({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    connectionLimit: 5,
+})
 
-const db = await mysql.createPool({
-    host:env.DB_HOST,
-    port:env.DB_PORT,
-    user:env.DB_USER,
-    password:env.DB_PASSWORD,
-    database:env.DB_NAME,
-    multipleStatements:true
-});
+const prisma = new PrismaClient({ adapter }) 
 
-
-try {
-    const connection  = await db.getConnection();
-    console.log("Banco de dados conectado!");
-    connection.release();
-} catch (err) {
-    console.log("Erro ao connectar no banco!", err)
-}
-
-
-const dirPath = path.join(__dirname, "migrations");
-for (const file of fs.readdirSync(dirPath)) {
+const testConnection = async () => {
     try {
-        const contentFile = fs.readFileSync(path.join(dirPath, file), "utf-8")
-        await db.query(contentFile);
+        await prisma.$connect();
+        console.log("✅ Banco de dados iniciado com sucesso!")
     } catch (error) {
-        console.log(`Erro na migration ${file}`, error)
+        console.log("❌ Erro ao connectar no banco de dados");
+        console.log(error);
     }
 }
 
-
-export default db;
+export { 
+    prisma,
+    testConnection  
+}

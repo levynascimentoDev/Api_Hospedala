@@ -1,37 +1,42 @@
 import type { Session } from '../../types/index.js';
-import db from '../db.js'
+import { prisma } from '../db.js'
+
 
 
 
 class SesssionModel {
-    static async create(session_id:string, options:{user_id:number, expire_at:Date, refresh_token_hash:string}) : Promise<Session | null>{
+    static async create(session_id:string, options:{user_id:number, expire_at:Date, refresh_token_hash:string}) {
         
         try {
 
             const expire_formated = options.expire_at.toLocaleDateString();
 
-            const [results] =  await db.query<Session[]>(
-                `INSERT INTO sessions(id, refresh_token_hash, expire_at, user_id) VALUES (?, ?, ?, ?);`,
-                [session_id,  options.refresh_token_hash, expire_formated, options.user_id],
-            )
+            const session = await prisma.sessions.create({
+                data:{
+                    id:session_id,
+                    user_id:options.user_id,
+                    refresh_token_hash:options.refresh_token_hash,
+                    expire_at:expire_formated                
+                }
+            })
+            
 
-            return results[0] ?? null;
+            return session;
         } catch (err) {
             return null;
         }
        
     }
 
-    static async getByID(session_id:string) : Promise<Session | null>{
-
+    static async getByID(session_id:string) {
 
         try {
-            const [sessions] = await db.query<Session[]>(
-                `SELECT * FROM sessions WHERE id = ?;`,
-                [session_id]
-            )
-
-            return sessions[0] ?? null;
+            const session = await prisma.sessions.findUnique({
+                where:{
+                    id:session_id
+                }
+            })  
+            return session;
         } catch (err) {
             return null
         }
@@ -42,10 +47,11 @@ class SesssionModel {
     static async delete(session_id:string) : Promise<boolean>{
 
         try {
-            await db.query(
-                "DELETE FROM sessions WHERE id = ?;",
-                [session_id]
-            )
+            await prisma.sessions.delete( {
+                where:{
+                    id:session_id
+                }
+            })
 
             return true;
         } catch (err) {

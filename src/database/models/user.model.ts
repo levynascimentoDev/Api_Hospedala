@@ -1,6 +1,5 @@
-import db from '../db.js';
-import { type User, type userCreate } from '../../types/index.js';
-
+import type { userCreate } from '../../types/index.js';
+import { prisma } from '../db.js';
 
 
 interface UserOptions {
@@ -15,56 +14,70 @@ interface UserOptions {
 
 class UserModel {
 
-    static async getByEmail(email:string): Promise<User | null> {
+    static async getByEmail(email:string) {
         try {
-            const [users] = await db.query<User[]>('SELECT * FROM users WHERE email = ?;', [email])    
-            return users[0] ?? null
+            const user = await prisma.users.findUnique({
+                where:{
+                    email
+                }
+            })    
+            return user;
 
-        } catch (err) {
+        } catch (error) {
             return null
         }
     }
 
 
-    static async getUserbyID(id:number): Promise<User | null> {
+    static async getUserbyID(id:number) {
 
         try {
 
-            const [users] = await db.query<User[]>('SELECT * FROM users WHERE id = ?;', [id])
-            return users[0] ?? null
+            const user = await prisma.users.findUnique({
+                where:{
+                    id
+                }
+            })
+            return user;
 
-        } catch (err) {
+        } catch (error) {
             return null
         }
 
     }
     
-    static async create(id: number, payload: userCreate): Promise<User | null> {
+    static async create(id: number, payload: userCreate) {
 
         try {
-            const [users] = await db.query<User[]>(
-                'INSERT INTO users(id, given_name, family_name, birth_date, email, icon, role) VALUES(?, ?, ?, ?, ?, ?, ?);',
-                [id, payload.given_name, payload.family_name, payload.birth_date, payload.email, payload.icon, payload.role]
-            )
+            const user = await prisma.users.create({
+                data:{
+                    id,
+                    ...payload
+                }
+            })
 
-            return users[0] ?? null;
+            return user;
 
-        } catch (err) {    
-            return null;
+        } catch (error) {    
+            console.log(error)
         }
         
     }
 
-    static async alterUserbyEmail(email:string, options:UserOptions): Promise<User | null> {
+    static async alterUserbyEmail(email:string, options:UserOptions) {
 
         try {
-            const [users] = await db.query<User[]>(
-                `UPDATE users SET ${Object.keys(options).map(value => `${value} = ?`).join(", ")} WHERE email = '${email}';`,
-                Object.values(options)
-            )
-            return users[0] ?? null;
+            const user = await prisma.users.update({
+                where:{
+                    email
+                },
+                data:{
+                    ...options
+                }
+            })
+            return user;
 
-        } catch (err) {
+        } catch (error) {
             return null;
         }
         
