@@ -1,7 +1,6 @@
-import type { RowDataPacket } from "mysql2";
 
 
-export interface Place extends RowDataPacket{
+export interface Place {
     id:string;
     title:string;
     description:string;
@@ -17,7 +16,7 @@ export interface Place extends RowDataPacket{
     available:boolean;
 }
 
-export interface PlaceMedia extends RowDataPacket{
+export interface PlaceMedia {
     id:number;
     url:string;
     place_id:string;

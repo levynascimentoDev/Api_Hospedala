@@ -1,6 +1,5 @@
-import type { RowDataPacket } from "mysql2";
 
-export interface Session extends RowDataPacket {
+export interface Session{
     id:string;
     refresh_token_hash:string;
     expire_at:Date | string;
@@ -14,7 +13,7 @@ export interface TokenAuthTemp {
     given_name?:string;
 }
 
-export interface User  extends userCreate , RowDataPacket{
+export interface User  extends userCreate {
     id:number;
 }
 
