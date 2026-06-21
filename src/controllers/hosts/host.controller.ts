@@ -14,7 +14,7 @@ export class HostController {
                     id:place.id,
                     title:place.title,
                     default_value:place.default_value,
-                    image:(await PlaceModel.getMediaByPlaceID(place.id))?.url,
+                    image:(await PlaceModel.getMediasByID(place.id))?.[0]?.url,
                     city:place.city,    
                     type:place.type
                 })

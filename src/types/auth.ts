@@ -21,14 +21,13 @@ export interface userCreate {
     given_name:string;
     family_name:string;
     email:string;
-    birth_date:string;
+    birth_date:string | Date;
     icon?:string | null | undefined;
     role:"host" | "user" | "admin";
 }
 
 export interface payloadAcess {
     user_id:number;
-    session_id:string;
 }
 
 export interface RequestHttp {

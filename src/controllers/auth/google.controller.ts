@@ -2,9 +2,7 @@ import type { googleUserinfo, TokenAuthTemp } from "../../types/index.js"
 import { getPayloadGoogleApi } from "../../utils/google.js"
 import type { Request, Response } from "express"
 import Jwt from "../../utils/jwt.js"
-import SesssionModel from "../../database/models/session.model.js"
 import UserModel from "../../database/models/user.model.js"
-import { generateHash } from "../../utils/cript.js"
 import crypto from 'crypto'
 
 
@@ -40,46 +38,12 @@ export class GoogleAuthController {
                     const expire_at = new Date();
                     expire_at.setDate(expire_at.getDate() + 7);
 
-                    // REFRESH KEY
-                    const refresh = crypto.randomBytes(16).toString('hex');
-                    
-                    // ADD REFRESH TOKEN HASH IN DB
-                    const newRefreshToken = await SesssionModel.create(crypto.randomUUID(), {
-                        user_id:user.id as number,
-                        refresh_token_hash:await generateHash(refresh) as string,
-                        expire_at:expire_at
-                    })
-                    
-
-                    // REFRESH TOKEN
-                    const refreshToken = Jwt.create(
-                        {
-                            session_id:newRefreshToken?.id,
-                            refresh_token:refresh
-                        }, "7d")
-            
-                    // CREATE ACESS TOKEN
             
                     const acessToken = Jwt.create(
                         {
                             user_id:user.id,
-                            session_id:newRefreshToken?.id
                         },"15m")
             
-            
-                    // SET COOKIES
-                        // (refresh)
-                    res.cookie(
-                        'uuid_refresh',
-                        refreshToken,
-                        {
-                            httpOnly:true,
-                            secure:false,
-                            sameSite:"strict",    
-                            maxAge:7 * 24 * 60 * 60 * 1000
-                        }
-                    )
-                        // (acess)
                     res.cookie(
                         'acess_auth',
                         acessToken,

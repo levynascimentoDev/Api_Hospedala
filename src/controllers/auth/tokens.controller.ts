@@ -1,116 +1,62 @@
-import type { TokenAuthTemp } from "../../types/index.js";
 import Jwt from "../../utils/jwt.js";
 import { generateCode } from "../../utils/functions.js";
 import type { Request, Response } from "express";
 import { sendEmail } from "../../utils/mail.js";
-import SesssionModel from "../../database/models/session.model.js";
-import UserModel from "../../database/models/user.model.js";
+import { ApiResponse } from "../../utils/response.js";
 
 export class AuthTokenController {
-    static async refreshCode(req:Request<{}, {}, {token:string}>, res:Response) {
+    static async refreshCode(req:Request, res:Response) {
         try {
 
-            const payload = Jwt.decode<TokenAuthTemp>(req.temp_auth);
+            const { action, email } = req.temp_auth;
 
-            if (payload && payload.action == "checkout") {
+            if (action == "checkout") {
                 const newCode = generateCode() as string
-                await sendEmail(payload.email, newCode as string);
+                await sendEmail(email, newCode as string);
             
                 const newTokenCode = Jwt.create({
-                    ...payload,
+                    ...req.temp_auth,
                     code:newCode
                 }, "10m")
 
-
-                res.clearCookie('temp_auth', {
-                    httpOnly:true,
-                    secure:false,
-                    sameSite:'strict'
-                })
 
                 res.cookie('temp_auth',
                     newTokenCode,
                     {
                         httpOnly:true,
-                        secure:false,
+                        secure:process.env.NODE_ENV == 'production',
                         sameSite:"strict"
                     }
                 )
 
-                return res.status(200).json({
-                    status:200,
-                    message:"token has ben refreshed"
-                });
+                return res.status(200).json(ApiResponse.success("token has ben refreshed"));
             } else {
-                return res.status(404).json({
-                    status:401,
-                    message:"Bad Request"
-                });
+                return res.status(401).json(ApiResponse.error("Unthorized"));
             }
         } catch (err) {
-            
-            return res.status(500).json({
-                status: 500,
-                message: "Internal Server Error",
-            })
+            console.log(err)
+            return res.status(400).json(ApiResponse.error("Bad Request"));            
         }
     }
 
-    static async refreshToken(req:Request<{}, {}, {token:string}>, res:Response) {
-        try {
-            const session = await SesssionModel.getByID(req.session_id)
-            const user = await UserModel.getUserbyID(session?.user_id as number)
-
-            const newToken = Jwt.create({
-                user_id:user?.id,
-                session_id:session?.id
-            }, "15m");
-            
-            res.cookie('acess_auth', 
-                newToken,
-                {
-                    httpOnly:true,
-                    secure:false,
-                    sameSite:"strict"
-                }
-            )
-            
-        
-            return res.status(200).json({
-                status:200,
-                message:"tokens has ben refreshed"
-            });
-        
-        } catch (err) {
-            
-            return res.status(500).json({
-                status: 500,
-                message: "Bad Requests",
-            })
-        }
-    }
-
-
+    
     static async tokenVerify(req:Request, res:Response) {
         try {
             
-            const payload = Jwt.decode<TokenAuthTemp>(req.temp_auth);
 
+            const { action } = req.temp_auth;
+            
             return res.status(200).json({
                 status:200,
                 message:"Authorized",
-                action:payload?.action
+                action:action
             })
             
             
         } catch (err) {
 
             console.log(err)
-            return res.status(500).json({
-                status:500,
-                message:"Internal Server Error"
-            })
-
+            return res.status(400).json(ApiResponse.error("Bad Request"));            
         }
     }
 

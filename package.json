@@ -8,8 +8,8 @@
     "dev": "NODE_ENV=development bun run --watch app.ts",
     "migrate": "bunx prisma migrate deploy",
     "migrate:dev": "NODE_ENV=development bunx prisma migrate dev",
-    "migrate:reset":"NODE_ENV=development bunx prisma migrate reset",
-    "generate":"bunx prisma generate"
+    "migrate:reset": "NODE_ENV=development bunx prisma migrate reset",
+    "generate": "bunx prisma generate"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -33,6 +33,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^7.0.9"
+    "nodemailer": "^7.0.9",
+    "zod": "^4.4.3"
   }
 }

@@ -18,16 +18,17 @@ class PlaceModel {
 
     }
 
-    static async getMediaByPlaceID(place_id:string) {
+    static async getMediasByID(place_id:string) {
         
 
         try {
-            const place = await prisma.places.findUnique({
+            const place_media = await prisma.media_places.findMany({
                 where:{
-                    id:place_id
+                    place_id:place_id
                 }
             })
-            return place;
+    
+            return place_media;
         } catch (error) {
             return null
         }

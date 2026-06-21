@@ -23,7 +23,7 @@ model comments {
 model media_places {
   id       Int    @id @default(autoincrement())
   place_id String @db.VarChar(10)
-  url      String @db.VarChar(300)
+  url      String @db.Text
   places   places @relation(fields: [place_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "media_places_ibfk_1")
 
   @@index([place_id], map: "place_id")
@@ -73,15 +73,6 @@ model services {
   @@unique([place_id, type], map: "place_id")
 }
 
-model sessions {
-  id                 String   @id @db.VarChar(40)
-  refresh_token_hash String   @db.VarChar(100)
-  user_id            Int
-  expire_at          DateTime @db.Date
-  users              users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "sessions_ibfk_1")
-
-  @@index([user_id], map: "user_id")
-}
 
 model users {
   id          Int        @id
@@ -93,7 +84,6 @@ model users {
   role        users_role
   comments    comments[]
   reviews     reviews[]
-  sessions    sessions[]
 }
 
 enum users_role {

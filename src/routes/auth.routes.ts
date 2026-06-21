@@ -7,12 +7,11 @@ import { Router } from "express";
 const authRoutes = Router()
 // AUTH
 authRoutes.post("/login", AuthLoginController.login);    
-authRoutes.post("/register", AuthMidlleware.AuthToken, AuthLoginController.register);    
-authRoutes.post('/code', AuthMidlleware.AuthToken, AuthLoginController.checkCode);
+authRoutes.post("/register", AuthMidlleware.AuthTempToken, AuthLoginController.register);    
+authRoutes.post('/code', AuthMidlleware.AuthTempToken, AuthLoginController.checkCode);
 
-authRoutes.get('/tokens/verify', AuthMidlleware.AuthToken, AuthTokenController.tokenVerify);
-authRoutes.get('/refresh/token', AuthMidlleware.AuthRefresh, AuthTokenController.refreshToken);
-authRoutes.get('/refresh/code', AuthMidlleware.AuthToken, AuthTokenController.refreshCode);
+authRoutes.get('/tokens/verify', AuthMidlleware.AuthTempToken, AuthTokenController.tokenVerify);
+authRoutes.get('/refresh/code', AuthMidlleware.AuthTempToken, AuthTokenController.refreshCode);
 
 // OAUTH
 authRoutes.get('/google', GoogleAuthController.getClientUrl);
