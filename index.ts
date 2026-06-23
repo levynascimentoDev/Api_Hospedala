@@ -1,11 +1,9 @@
-import './src/configs/env.js';
+import './src/configs/env.js'
 import { testConnection } from './src/database/db.js';
-import routes from './src/routes';
+import routes from './src/routes/index.js';
 import cookieParser from 'cookie-parser';
 import express, { type Response } from 'express';
 import cors from 'cors';
-
-
 
 (async () => await testConnection())()
 

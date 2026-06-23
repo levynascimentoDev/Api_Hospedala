@@ -1,26 +1,44 @@
-import transporter from '../configs/mail.js';
+import { fileURLToPath } from 'node:url';
+import { Resend } from "resend";
 import path from 'node:path'
 import fs from 'node:fs'
-import { fileURLToPath } from 'node:url';
+
+
+
+const resend = new Resend(process.env.RESEND_EMAIL_TOKEN);
+
+interface Options {
+    to:string;
+    subject:string;
+    username:string | null;
+    code:string;
+}
+
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-export async function sendEmail(email:string, code:string, username?:string) {
-    const localFile = path.join(__dirname, '../assets/email.html')
+export async function sendCodeCheckoutEmail(options:Options) {
 
-    let fileContent:string = fs.readFileSync(localFile, 'utf-8').replace('{{name}}', username ? username : "");
-    let codeArray:string[] = code.split('')
-    for (let i:number = 0; i < codeArray.length; i++) {
-        fileContent = fileContent.replace(`{{code${i}}}`, `${codeArray[i]}` )
+    const { to, subject, username, code } = options;
+
+    let codeSplited = code.split('')
+    
+    const fileDir = path.join(__dirname, '../assets/email.html')
+
+    let content = fs.readFileSync(fileDir, 'utf-8')
+        .replace('{{name}}', username ? username : "");
+
+    for (let i:number = 0; i < codeSplited.length; i++) {
+        content = content.replace(`{{code${i}}}`, `${codeSplited[i]}`)
     }
     
-    await transporter.sendMail({
+    await resend.emails.send({
         from:process.env.EMAIL,
-        to:email,
-        subject:"Verificação de email",
-        html:fileContent
+        to:to,
+        subject:subject,
+        html:content
     })
 }

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import UserModel from "../../database/models/user.model.js";
 import { generateCode, generateID } from "../../utils/functions.js";
-import { sendEmail } from "../../utils/mail.js";
+import { sendCodeCheckoutEmail } from "../../utils/mail.js";
 import { ApiResponse } from "../../utils/response.js";
 import { loginBodySchema, registerBodySchema, codeBodySchema } from "../../schemas/auth.schema.js";
 import Jwt from "../../utils/jwt.js";
@@ -15,11 +15,13 @@ export class AuthLoginController {
             const code = generateCode()
 
 
-            if (!user) {
-                await sendEmail(email as string, code)
-            } else {
-                await sendEmail(user.email as string, code, user.given_name)
-            }
+            await sendCodeCheckoutEmail({
+                subject:"Verificação de Email",
+                code,
+                to:email,
+                username:user?.given_name ?? null
+            })
+
 
             const payload = {
                 email:email,

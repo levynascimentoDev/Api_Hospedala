@@ -5,7 +5,7 @@ export class ApiResponse {
         return {
             success:true,
             message:message,
-            ...(data !== undefined && { data })
+            ...(data && { data })
         }    
     }
 

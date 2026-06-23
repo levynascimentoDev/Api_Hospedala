@@ -14,7 +14,7 @@ declare namespace NodeJS {
         SECRET:string;
         GOOGLE_CLIENT_ID:string
         GOOGLE_CLIENT_SECRET:string;
-        EMAIL_SECRET:string;
+        RESEND_EMAIL_TOKEN:string;
         EMAIL:string;
         NODE_ENV:'development' | 'production' | undefined
     }

@@ -1,0 +1,79 @@
+{
+  " ": "cmqpgti0r0000356pbem23kkt",
+  "title": "Apartamento Completo no Centro",
+  "description": "Apartamento mobiliado próximo à praia e ao centro da cidade.",
+  "pricePerNight": 250.00,
+  "host_id":278372173821738632,
+  "address": {
+    "id":1,
+    "street": "Rua Exemplo",
+    "number": "123",
+    "city": "Fortaleza",
+    "state": "CE",
+    "cep": "60000-000",
+    "lat": -3.7319,
+    "lng": -38.5267,
+    "accommodation_id":"cmqpgti0r0000356pbem23kkt"
+  },
+
+  "propertyType": ["apartamento", "casa", "pousada", "chalê", "quarto", "hotel", "resort"],
+  "maxGuests": 16,
+  "bedrooms": 1,
+  "beds": 3,
+  "bathrooms": 1,
+
+  "services":{
+    "id":1,
+    "accommodation_id":"cmqpgti0r0000356pbem23kkt",
+    "wifi":false,
+    "air":false,
+    "tv":false,
+    "kitchen":false,
+    "pool":false,
+    "parking":false,
+    "heater":false,
+    "academy":false,
+    "grill":false,
+    "jacuzzi":false,
+    "hotTub":false
+
+  },
+
+  "images": [
+    {
+      "id": "img_002",
+      "key":"cmqpgti0r0000356pbem23kkt/8f3815a9-f5bc-492b-bd8a-20b768f0fbbe-image.png",
+      "base_url": "https://cdn.hospedala.com/",
+      "accommodation_id":"cmqpgti0r0000356pbem23kkt"
+    },
+    {
+      "id": "img_002",
+      "key":"cmqpgti0r0000356pbem23kkt/8f3815a9-f5bc-492b-bd8a-20b768f0fbbe-image.png",
+      "base_url": "https://cdn.hospedala.com/",
+      "accommodation_id":"cmqpgti0r0000356pbem23kkt"
+    }
+  ],
+
+  "rules": {
+    "petsAllowed": false,
+    "smokingAllowed": false,
+    "eventsAllowed": false
+  },
+
+  "rating": 4.8,
+  "reviewCount": 127,
+  "reviews":[
+    {
+      "id":"0c624e6a-22c8-4506-89e9-2c5bbda034fc",
+      "user_id":82387218378237213,
+      "content":"Muito bom",
+      "createdAt":"2026-06-22T10:00:00Z",
+      "accommodation_id":"cmqpgti0r0000356pbem23kkt"
+    }
+  ],
+
+  "status": "active",
+
+  "createdAt": "2026-06-22T10:00:00Z",
+  "updatedAt": "2026-06-22T10:00:00Z"
+}

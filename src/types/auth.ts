@@ -14,7 +14,7 @@ export interface TokenAuthTemp {
 }
 
 export interface User  extends userCreate {
-    id:number;
+    id:string;
 }
 
 export interface userCreate {

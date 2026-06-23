@@ -29,7 +29,7 @@ class UserModel {
     }
 
 
-    static async getUserbyID(id:number) {
+    static async getUserbyID(id:string) {
 
         try {
 
@@ -46,7 +46,7 @@ class UserModel {
 
     }
     
-    static async create(id: number, payload: userCreate) {
+    static async create(id: string, payload: userCreate) {
 
         try {
             const user = await prisma.users.create({
@@ -85,4 +85,4 @@ class UserModel {
 
 }
 
-export default UserModel;
+export { UserModel };

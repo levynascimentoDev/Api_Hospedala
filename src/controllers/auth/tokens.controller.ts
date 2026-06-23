@@ -1,18 +1,24 @@
 import Jwt from "../../utils/jwt.js";
 import { generateCode } from "../../utils/functions.js";
 import type { Request, Response } from "express";
-import { sendEmail } from "../../utils/mail.js";
+import { sendCodeCheckoutEmail } from "../../utils/mail.js";
 import { ApiResponse } from "../../utils/response.js";
 
 export class AuthTokenController {
     static async refreshCode(req:Request, res:Response) {
         try {
 
-            const { action, email } = req.temp_auth;
+            const { action, email, given_name } = req.temp_auth;
 
             if (action == "checkout") {
-                const newCode = generateCode() as string
-                await sendEmail(email, newCode as string);
+                const newCode = generateCode();
+
+                await sendCodeCheckoutEmail({   
+                    code:newCode,
+                    subject:"Verificação de Email",
+                    to:email,
+                    username:given_name ?? null
+                });
             
                 const newTokenCode = Jwt.create({
                     ...req.temp_auth,

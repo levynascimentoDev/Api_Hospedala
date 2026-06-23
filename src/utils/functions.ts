@@ -9,13 +9,13 @@ export function generateCode() : string {
     return code as string;
 }
 
-export function generateID() : number {
+export function generateID() : string {
 
     let ID = "";
-    for (let i:number = 0; i < 8; i++) {
+    for (let i:number = 0; i < 20; i++) {
         ID += `${Math.floor(Math.random() * 10)}` 
     }
     
-    return Number(ID) as number
+    return ID
 }
 

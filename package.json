@@ -4,11 +4,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "bun run app.ts",
-    "dev": "NODE_ENV=development bun run --watch app.ts",
-    "migrate": "bunx prisma migrate deploy",
-    "migrate:dev": "NODE_ENV=development bunx prisma migrate dev",
-    "migrate:reset": "NODE_ENV=development bunx prisma migrate reset",
+    "start": "NODE_ENV=production bun run index.ts",
+    "dev": "bun run --watch index.ts",
+    "migrate": "NODE_ENV=production bunx prisma migrate deploy",
+    "migrate:dev": "bunx prisma migrate dev",
+    "migrate:reset": "bunx prisma migrate reset",
     "generate": "bunx prisma generate"
   },
   "devDependencies": {
@@ -17,7 +17,6 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/nodemailer": "^7.0.2",
     "prisma": "^7.8.0"
   },
   "peerDependencies": {
@@ -33,7 +32,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^7.0.9",
+    "resend": "^6.14.0",
     "zod": "^4.4.3"
   }
 }
