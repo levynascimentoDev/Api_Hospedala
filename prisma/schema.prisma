@@ -10,7 +10,7 @@ datasource db {
 model reviews {
   id                String           @id  @default(uuid())
   accommodationId   String           @db.VarChar(35) @map("accommodation_id")
-  authorId           String          @db.VarChar(20) @map("author_id")
+  authorId          String           @db.VarChar(20) @map("author_id")
   createdAt         DateTime         @default(now()) @map("created_at")
   content           String           @db.Text
   accommodation     accommodations   @relation(fields: [accommodationId], references: [id], onDelete: Cascade)
@@ -22,20 +22,21 @@ model media_accommodations {
   id              Int             @id @default(autoincrement())
   accommodationId String          @db.VarChar(35) 
   key             String          @db.VarChar(255)
+  cover           Boolean         @default(false)
   accommodation   accommodations  @relation(fields: [accommodationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "media_accommodations_ibfk_1")
 }
-
 model accommodations {
   id            String                      @id @db.VarChar(35) @default(cuid())
-  ownerId       String                      @db.VarChar(20)             @map("owner_id")
-  complete      Boolean                     @default(false)
+  ownerId       String                      @db.VarChar(20)                       @map("owner_id")
   available     Boolean                     @default(false)
-  createdAt     DateTime                    @default(now())              @map("created_at")
-  updatedAt     DateTime                    @updatedAt                   @map("updated_at")
+  currentStep   OnboardingStep              @default(PROPERTY_TYPE)       
+  createdAt     DateTime                    @default(now())                       @map("created_at")
+  updatedAt     DateTime                    @updatedAt                            @map("updated_at")
   propertyType  property_type?              @map("property_type")
+  spacetype     SpaceType?                  @map("space_type")
   title         String?                     @db.MediumText
   description   String?                     @db.Text 
-  pricePerNight Decimal?                    @db.Decimal(10, 2)           @map("price_per_night")
+  pricePerNight Decimal?                    @db.Decimal(10, 2)                     @map("price_per_night")
   maxGuests     Int?                        @db.Int @map("max_guests")
   bedrooms      Int?
   bathrooms     Int?
@@ -48,29 +49,47 @@ model accommodations {
   address       AddressAccommodation?
 }
 
+enum SpaceType {
+  ALL
+  BEDROOM
+  ALBERQUE
+}
+
+enum OnboardingStep {
+  PROPERTY_TYPE
+  SPACE_TYPE
+  SERVICES
+  LOCATION
+  DETAILS
+  PHOTOS
+  RULES
+  FINISH
+  COMPLETED
+}
+
 model AddressAccommodation {
-  id               Int                         @id                     @default(autoincrement())
-  lat              Decimal?                    @db.Decimal(10, 8)  
-  lon              Decimal?                    @db.Decimal(11, 8)
-  cep              Int                   
+  id               Int                         @id                                                    @default(autoincrement())
+  lat              Decimal                     @db.Decimal(10, 8)  
+  lon              Decimal                     @db.Decimal(11, 8)
+  cep              String                      @db.Char(9)
   street           String
   neighborhood     String
   number           Int                        @map("address_number")
   state            String                     @db.Char(2)
   city             String                     @db.VarChar(40)
-  accommodationId  String                     @db.VarChar(35)         @map("accommodation_id") @unique
-
-  accomodation     accommodations @relation(fields: [accommodationId], references: [id])
+  accommodationId  String                     @db.VarChar(35)                                           @map("accommodation_id") @unique
+  accomodation     accommodations             @relation(fields: [accommodationId], references: [id])
+  updatedAt        DateTime                   @updatedAt                                                @map("updated_at")
 }
 
 enum property_type {
-  apartamento
-  casa
-  pousada
-  chalê
-  quarto
-  hotel
-  resort
+  APARTAMENTO
+  CASA
+  POUSADA
+  CHALÊ
+  QUARTO
+  HOTEL
+  RESORT
 }
 
 model services {
@@ -88,14 +107,16 @@ model services {
   jacuzzi         Boolean        @default(false)
   hotTub          Boolean        @default(false) @map("hot_hub")
   accommodation   accommodations @relation(fields: [accommodationId], references: [id], onDelete: Cascade)
+  
 }
 
 
 model rules {
-  id Int @id @default(autoincrement())
+  id       Int            @id @default(autoincrement())
   animals  Boolean
   events   Boolean
   optional String
+  accommodationId  String @db.VarChar(35) @unique
 }
 
 
