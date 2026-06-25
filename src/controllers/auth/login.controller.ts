@@ -1,17 +1,21 @@
 import type { Request, Response } from "express";
-import UserModel from "../../database/models/user.model.js";
 import { generateCode, generateID } from "../../utils/functions.js";
 import { sendCodeCheckoutEmail } from "../../utils/mail.js";
 import { ApiResponse } from "../../utils/response.js";
 import { loginBodySchema, registerBodySchema, codeBodySchema } from "../../schemas/auth.schema.js";
 import Jwt from "../../utils/jwt.js";
+import { prisma } from "../../database/db.js";
 
 
 export class AuthLoginController {
     static async login(req:Request, res:Response) {
         try {
             const { email } = loginBodySchema.parse(req.body) ;
-            const user = await UserModel.getByEmail(email);
+            const user = await prisma.users.findUnique({
+                where:{
+                    email:email
+                }
+            })
             const code = generateCode()
 
 
@@ -28,6 +32,8 @@ export class AuthLoginController {
                 code:code,
                 action:"checkout"   
             } 
+
+            console.log(code);
 
             const token = Jwt.create(payload, "10m");
 
@@ -59,15 +65,17 @@ export class AuthLoginController {
                 birth_date
             } = registerBodySchema.parse(req.body);
 
-            const { email } = req.temp_auth;
+            const { email } = req.temp_auth!;
             
-            
-            const user = await UserModel.create(generateID(), {
-                email,
-                given_name,
-                family_name,
-                role:"user",
-                birth_date:birth_date
+            const user = await prisma.users.create({
+                data:{
+                    id:generateID(),
+                    email,
+                    given_name,
+                    family_name,
+                    role:"USER",
+                    birth_date:birth_date
+                }
             });
 
 
@@ -83,7 +91,7 @@ export class AuthLoginController {
 
 
             res.cookie(
-                'acess_auth',
+                'access_auth',
                 acessToken,
                 {
                     httpOnly:true,
@@ -101,7 +109,7 @@ export class AuthLoginController {
             
             return res
                 .status(200)
-                .json(ApiResponse.error("User loggend"))
+                .json(ApiResponse.success("Authorized"))
         
         
         } catch (err) {
@@ -117,25 +125,55 @@ export class AuthLoginController {
             
             const { code } = codeBodySchema.parse(req.body) ;
 
-            if (code != req.temp_auth.code) {
+            if (code != req.temp_auth?.code) {
                 return res.status(401).json({
                     status:401,
                     message:"Bad Request"
                 })
             }
 
-            const newPayload = {
+            const user = await prisma.users.findUnique({
+                where:{
+                    email:req.temp_auth.email
+                }
+            })
+            
+            if (user) {  
+                const acessToken = Jwt.create({ user_id:user.id },"15m")
+
+
+                res.clearCookie('temp_auth', {
+                    httpOnly:true,
+                    secure:process.env.NODE_ENV == 'production',
+                    sameSite:"strict"
+                })
+        
+                res.cookie(
+                    'access_auth',
+                    acessToken,
+                    {
+                        httpOnly:true,
+                        secure:process.env.NODE_ENV == "production",
+                        sameSite:"strict" ,
+                        maxAge:15 * 60 * 1000   
+                    }
+                )
+                
+                return res.status(200).json(
+                    ApiResponse.success("Authorized", {
+                        redirect:"/"
+                    })
+                );
+            }
+
+            const cookie = {
                 email:req.temp_auth.email,
                 action:"complete",                
             }
 
-            const token = Jwt.create(newPayload, "5m");
 
-            res.clearCookie('temp_auth', {
-                httpOnly:true,
-                secure:process.env.NODE_ENV == 'production',
-                sameSite:"strict"
-            })
+            const token = Jwt.create(cookie, "5m");
+
 
             res.cookie('temp_auth', token, {
                 httpOnly:true,
@@ -145,7 +183,9 @@ export class AuthLoginController {
         
             return res
                 .status(201)
-                .json(ApiResponse.success("Token Has ben Created"))
+                .json(ApiResponse.success("Token Has ben Updated", {
+                    redirect:"/auth/complete"
+                }))
 
 
         } catch (err) {        

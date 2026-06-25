@@ -8,7 +8,7 @@ export class AuthTokenController {
     static async refreshCode(req:Request, res:Response) {
         try {
 
-            const { action, email, given_name } = req.temp_auth;
+            const { action, email, given_name } = req.temp_auth!;
 
             if (action == "checkout") {
                 const newCode = generateCode();
@@ -50,7 +50,7 @@ export class AuthTokenController {
         try {
             
 
-            const { action } = req.temp_auth;
+            const { action } = req.temp_auth!;
             
             return res.status(200).json({
                 status:200,

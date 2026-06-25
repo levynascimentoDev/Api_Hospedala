@@ -2,8 +2,7 @@ import type { googleUserinfo, TokenAuthTemp } from "../../types/index.js"
 import { getPayloadGoogleApi } from "../../utils/google.js"
 import type { Request, Response } from "express"
 import Jwt from "../../utils/jwt.js"
-import UserModel from "../../database/models/user.model.js"
-import crypto from 'crypto'
+import { prisma } from "../../database/db.js"
 
 
 
@@ -31,7 +30,12 @@ export class GoogleAuthController {
             const userinfo = await getPayloadGoogleApi(req.query.code as string) as googleUserinfo;
         
             if (userinfo) {
-                const user = await UserModel.getByEmail(userinfo.email);
+                const user = await prisma.users.findUnique({
+                    where:{
+                        email:userinfo.email
+                    }
+
+                });
                 
                 if (user) {
 
@@ -45,11 +49,11 @@ export class GoogleAuthController {
                         },"15m")
             
                     res.cookie(
-                        'acess_auth',
+                        'access_auth',
                         acessToken,
                         {
                             httpOnly:true,
-                            secure:false,
+                            secure:process.env.NODE_ENV == 'production',
                             sameSite:"strict" ,
                             maxAge:15 * 60 * 1000   
                         }

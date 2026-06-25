@@ -6,6 +6,6 @@ import accommodationRoutes from "./accommodation.routes.js";
 const routes = Router();
 routes.use('/users', userRoutes);
 routes.use('/auth', authRoutes);
-routes.use('/host', accommodationRoutes);
+routes.use('/accommodations', accommodationRoutes);
 
 export default routes;

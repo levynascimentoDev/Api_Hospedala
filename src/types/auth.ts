@@ -23,7 +23,7 @@ export interface userCreate {
     email:string;
     birth_date:string | Date;
     icon?:string | null | undefined;
-    role:"host" | "user" | "admin";
+    role:"HOST" | "USER" | "ADMIN";
 }
 
 export interface payloadAcess {

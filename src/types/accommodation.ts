@@ -1,19 +1,11 @@
+import { z } from "zod";
+import { accomodationResponse } from "../schemas/accommodation.schemas";
 
 export type PropertyType = "apartamento" | "casa" | "pousada" | "chalê" | "quarto" | "hotel" | "resort"
 
-export interface Accommodations {
-    id:string;
-    available:boolean;
-    complete:boolean;
-    title?:string;
-    description?:string;
-    property_type?:PropertyType;
-    ownerId:number;
-    max_guests?:number;
-    bedrooms?:number;
-}
 
 
+export type AccomodationResponse = z.infer<typeof accomodationResponse>;
 
 
 export interface CardResponse {
@@ -45,3 +37,11 @@ export interface QueryPlaces {
     baby:number;
     animal:number;
 }
+
+export interface AccommodatioWizzardResponse {
+    
+}
+
+
+
+
