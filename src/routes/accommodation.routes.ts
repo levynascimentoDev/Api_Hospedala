@@ -59,7 +59,7 @@ accommodationRoutes
 
 accommodationRoutes
     .patch(
-        '/update/:id/photos',
+        '/update/:id/photos/upload',
         AuthMidlleware.AuthUser,
         AccommodationMiddleware.validate,
         AccommodationCreateController.updatePhotos

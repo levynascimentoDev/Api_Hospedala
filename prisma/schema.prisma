@@ -52,7 +52,7 @@ model accommodations {
 enum SpaceType {
   ALL
   BEDROOM
-  ALBERQUE
+  ALBERG
 }
 
 enum OnboardingStep {
@@ -94,6 +94,7 @@ enum property_type {
 model services {
   id              Int            @id @default(autoincrement())
   accommodationId String         @unique @db.VarChar(35) @map("accommodation_id")
+
   wifi            Boolean        @default(false)
   air             Boolean        @default(false)
   tv              Boolean        @default(false)
@@ -105,8 +106,19 @@ model services {
   grill           Boolean        @default(false)
   jacuzzi         Boolean        @default(false)
   hotTub          Boolean        @default(false) @map("hot_hub")
+
+  balcony         Boolean        @default(false)
+  bedlinen        Boolean        @default(false)
+  breakfast       Boolean        @default(false)
+  cityView        Boolean        @default(false)
+  crib            Boolean        @default(false)
+  elevator        Boolean        @default(false)
+  reception       Boolean        @default(false)
+  safe            Boolean        @default(false)
+  seaView         Boolean        @default(false)
+  wheelchairAccessibility Boolean @default(false)
+
   accommodation   accommodations @relation(fields: [accommodationId], references: [id], onDelete: Cascade)
-  
 }
 
 

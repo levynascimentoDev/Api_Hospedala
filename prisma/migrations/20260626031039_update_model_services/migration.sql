@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE `services` ADD COLUMN `balcony` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `bedlinen` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `breakfast` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `cityView` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `crib` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `elevator` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `reception` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `safe` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `seaView` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `wheelchairAccessibility` BOOLEAN NOT NULL DEFAULT false;

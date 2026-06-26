@@ -50,13 +50,14 @@ export class AuthTokenController {
         try {
             
 
-            const { action } = req.temp_auth!;
-            
-            return res.status(200).json({
-                status:200,
-                message:"Authorized",
-                action:action
-            })
+            const { action, email } = req.temp_auth!;
+                
+            return res.status(200).json(
+                ApiResponse.success("Authorized", {
+                    email,
+                    action
+                })
+            )
             
             
         } catch (err) {

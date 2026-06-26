@@ -10,6 +10,7 @@ import { prisma } from "../../database/db.js";
 export class AuthLoginController {
     static async login(req:Request, res:Response) {
         try {
+
             const { email } = loginBodySchema.parse(req.body) ;
             const user = await prisma.users.findUnique({
                 where:{
@@ -17,6 +18,7 @@ export class AuthLoginController {
                 }
             })
             const code = generateCode()
+
 
 
             await sendCodeCheckoutEmail({
@@ -27,13 +29,13 @@ export class AuthLoginController {
             })
 
 
+
             const payload = {
                 email:email,
                 code:code,
                 action:"checkout"   
             } 
 
-            console.log(code);
 
             const token = Jwt.create(payload, "10m");
 

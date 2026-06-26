@@ -64,7 +64,7 @@ export class AccommodationCreateController {
 
 
             const { 
-                spacetype
+                space_type
             } = spaceTypeSchema.parse(req.body);
 
             const updated = await prisma.accommodations.update({
@@ -72,8 +72,8 @@ export class AccommodationCreateController {
                     id:accommodation.id,
                 },
                 data:{
-                    spacetype:spacetype,
-                    ...(accommodation.currentStep == 'PROPERTY_TYPE' && { currentStep:'SPACE_TYPE' })
+                    spacetype:space_type,
+                    ...(accommodation.currentStep == 'SPACE_TYPE' && { currentStep:'SERVICES' })
                 }
             })
 
@@ -170,7 +170,7 @@ export class AccommodationCreateController {
                         accommodationId:accommodation.id
                     },
                     data:{
-
+                        ...address
                     }
                 })
                 
