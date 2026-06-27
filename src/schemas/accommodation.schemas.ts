@@ -25,8 +25,8 @@ export const spaceTypeSchema = z.object({
 })
 
 export const addressSchema = z.object({
-  lat: z.coerce.number().min(-90).max(90),
-  lon: z.coerce.number().min(-180).max(180),
+  lat: z.coerce.number(),
+  lon: z.coerce.number(),
   cep: z.string().length(9),
   street: z.string().min(1),
   neighborhood: z.string().min(1),
@@ -67,10 +67,10 @@ export const rulesSchema = z.object({
 })
 
 export const detailsSchema = z.object({
-  bedrooms: z.number().int().positive(),
-  beds: z.number().int().positive(),
-  bathrooms: z.number().int().positive(),
-  max_guests: z.number().int().positive(),
+  bedrooms: z.number().int().min(0),
+  beds: z.number().int().min(0),
+  bathrooms: z.number().int().min(0),
+  max_guests: z.number().int().min(0),
 })
 
 export const finishSchema = z.object({

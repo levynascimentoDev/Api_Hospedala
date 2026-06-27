@@ -39,6 +39,7 @@ export async function sendCodeCheckoutEmail(options:Options) {
         from:process.env.EMAIL,
         to:to,
         subject:subject,
-        html:content
+        html:content,
+        
     })
 }

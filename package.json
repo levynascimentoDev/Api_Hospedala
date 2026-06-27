@@ -26,6 +26,7 @@
     "@fawmi/vue-google-maps": "^0.9.79",
     "@prisma/adapter-mariadb": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "api": ".",
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
