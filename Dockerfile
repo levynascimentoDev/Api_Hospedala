@@ -11,4 +11,4 @@ RUN bunx prisma generate
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "bunx prisma migrate deploy && bun run start"]
+CMD ["sh", "-c", "NODE_ENV=production bunx prisma migrate deploy && NODE_ENV=production bun run start"]
