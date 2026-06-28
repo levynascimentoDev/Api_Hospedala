@@ -11,4 +11,4 @@ RUN bunx prisma generate
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "bun run start"]
+CMD ["sh", "-c", "NODE_ENV=production bun run index.ts"]
