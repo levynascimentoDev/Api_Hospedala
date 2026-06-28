@@ -6,6 +6,9 @@ COPY . .
 
 RUN bun install
 
+# Gera o Prisma Client
+RUN bunx prisma generate
+
 EXPOSE 3000
 
-CMD ["bun", "run", "start"]
+CMD ["sh", "-c", "bunx prisma migrate deploy && bun run start"]
